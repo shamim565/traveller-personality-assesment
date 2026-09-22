@@ -29,7 +29,7 @@ as work proceeds.
 | 19 | Performance | targets verified; indexes, gzip, manifest storage | ✅ Done |
 | 20 | Deployment | Docker production stack validated end-to-end (Postgres path) | ✅ Done |
 | 21 | Exhibition review | checklist dry-run + docs final pass | ✅ Done |
-| 22 | Handover | runbook training with operators (on-site) | ⬜ Operator task |
+| 22 | Handover | docs/handover.md + full final validation green | ✅ Done |
 
 ## Phase Gates (all green)
 

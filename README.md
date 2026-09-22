@@ -47,7 +47,7 @@ Urban Explorer · Culture Connector
 
 ## Status
 
-**Phases 1–21 complete.** The MVP is production-ready and Docker-validated
+**Phases 1–22 complete.** The MVP is production-ready and Docker-validated
 (nginx → gunicorn → PostgreSQL). Remaining: Phase 22 on-site handover
 (staff training, final asset drop-in, kiosk setup per docs/exhibition-checklist.md).
 
