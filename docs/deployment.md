@@ -51,6 +51,9 @@ the LAN, gzip for text assets.
 DJANGO_SECRET_KEY=<generate with get_random_secret_key>
 DJANGO_DEBUG=False
 DJANGO_ALLOWED_HOSTS=<server-ip>,localhost
+# Exhibition LANs often serve plain HTTP on a closed network. Default True
+# (TLS-ready). Set False ONLY when TLS termination is unavailable:
+# DJANGO_SECURE_COOKIES=True
 POSTGRES_DB=travel_persona
 POSTGRES_USER=travel_persona
 POSTGRES_PASSWORD=<strong password>
