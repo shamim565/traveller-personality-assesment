@@ -245,7 +245,7 @@ class AssessmentAnswer(models.Model):
     )
     question = models.ForeignKey(Question, on_delete=models.PROTECT, related_name="+")
     answer_option = models.ForeignKey(
-        AnswerOption, on_delete=models.PROTECT, related_name="+"
+        AnswerOption, on_delete=models.PROTECT, related_name="answers"
     )
 
     class Meta:
