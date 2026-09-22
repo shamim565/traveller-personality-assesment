@@ -1,0 +1,10 @@
+[project]
+name = "travel-persona"
+version = "1.0.0"
+description = "AI Travel Personality Detector - World Tourism Day 2026 exhibition kiosk"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.development"
+testpaths = ["apps"]
+python_files = ["test_*.py"]

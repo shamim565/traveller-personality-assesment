@@ -1,0 +1,13 @@
+{
+  "name": "travel-persona-kiosk",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Travel Personality Detector - World Tourism Day 2026 kiosk frontend build",
+  "scripts": {
+    "build:css": "tailwindcss -i ./static/src/css/input.css -o ./static/css/kiosk.css --minify",
+    "watch:css": "tailwindcss -i ./static/src/css/input.css -o ./static/css/kiosk.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.17"
+  }
+}
