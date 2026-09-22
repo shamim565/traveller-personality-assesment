@@ -232,7 +232,9 @@ def resume_context(request):
             "step": "idle",
             "context": {
                 "personas": list(
-                    Persona.objects.filter(is_active=True).order_by("sort_order")
+                    Persona.objects.filter(is_active=True)
+                    .prefetch_related("avatars")
+                    .order_by("sort_order")
                 )
             },
         }

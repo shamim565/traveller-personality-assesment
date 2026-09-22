@@ -51,7 +51,7 @@ def dashboard(request):
         "total_started": selectors.get_total_started(),
         "total_completed": selectors.get_total_completed(),
         "completion_rate": selectors.get_completion_rate(),
-        "avg_duration": int(avg_duration) if avg_duration else "—",
+        "avg_duration": int(avg_duration) if avg_duration else None,
         "persona_chart": _chart_series(
             selectors.get_persona_distribution(), "count", "primary_persona__name"
         ),

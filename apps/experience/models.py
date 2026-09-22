@@ -41,6 +41,11 @@ class QuestionnaireVersion(models.Model):
 
     class Meta:
         ordering = ["-created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["name", "version"], name="uniq_version_name_version"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.name} ({self.version})"

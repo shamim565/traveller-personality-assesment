@@ -87,6 +87,8 @@ def calculate_travel_persona(answers):
         raise ScoringValidationError(f"missing answers for question orders {missing}")
 
     active_personas = list(Persona.objects.filter(is_active=True))
+    if not active_personas:
+        raise ScoringValidationError("no active personas configured")
     active_slugs = {persona.slug for persona in active_personas}
 
     weight_rows = list(

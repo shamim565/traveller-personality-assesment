@@ -17,4 +17,8 @@ SESSION_COOKIE_AGE = 1800  # 30 minutes; kiosk flow resets explicitly
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SECURE_HSTS_SECONDS = 0  # enable once TLS termination policy is confirmed
 
+CSRF_TRUSTED_ORIGINS = [
+    f"https://{host}" for host in ALLOWED_HOSTS if host != "*"
+]
+
 STATIC_ROOT = BASE_DIR / "staticfiles"

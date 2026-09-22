@@ -43,7 +43,7 @@
         </div>
         <div class="rounded-3xl bg-white/5 p-6 text-center">
             <p class="text-lg text-white/60">Avg Completion Time</p>
-            <p class="text-5xl font-bold">{{ avg_duration }}s</p>
+            <p class="text-5xl font-bold">{% if avg_duration %}{{ avg_duration }}s{% else %}—{% endif %}</p>
         </div>
     </section>
 
