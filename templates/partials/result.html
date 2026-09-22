@@ -1,5 +1,6 @@
 {% load static %}
 {% url 'experience:reset' as reset_url %}
+{% static 'avatars/global-default.svg' as fallback_avatar %}
 <div class="relative flex min-h-screen flex-col items-center justify-center gap-8 p-10 text-center">
     <img src="{% static 'branding/kv/kv-placeholder.svg' %}" alt=""
          class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-25">
@@ -14,6 +15,7 @@
         <h1 class="text-7xl font-bold text-brand-sand md:text-8xl">{{ persona.name|upper }}!</h1>
 
         <img src="{% static avatar %}" alt="{{ persona.name }} avatar"
+             @error="$el.src = '{{ fallback_avatar }}'"
              class="h-56 w-56 rounded-3xl border-4 border-brand-sand object-cover md:h-64 md:w-64">
 
         <p class="max-w-2xl text-3xl leading-snug md:text-4xl">{{ persona.short_description_bn }}</p>

@@ -14,7 +14,7 @@ def resolve_avatar(persona, gender=None, age_group=None):
     avatars = persona.avatars.all()
 
     if gender and age_group:
-        match = avatars.filter(gender=gender, age_group=age_group).first()
+        match = avatars.filter(gender=gender, age_group=age_group).order_by("-is_default").first()
         if match:
             return match.image
 
