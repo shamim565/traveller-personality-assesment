@@ -6,5 +6,9 @@ requires-python = ">=3.11"
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.development"
-testpaths = ["apps"]
+testpaths = ["apps", "tests"]
 python_files = ["test_*.py"]
+addopts = "-m 'not e2e'"
+markers = [
+    "e2e: kiosk end-to-end browser tests (run with pytest -m e2e)",
+]

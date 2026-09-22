@@ -1,5 +1,6 @@
 {% include "partials/progress.html" %}
 <div x-data="kioskReveal" x-show="show" x-transition.opacity.duration.300ms
+     data-guard="1"
      class="flex min-h-[80vh] flex-col items-center justify-center gap-10 p-10 text-center">
     <h1 class="max-w-5xl text-5xl font-bold leading-snug md:text-6xl">{{ question.text_bn }}</h1>
     <div class="grid w-full max-w-6xl grid-cols-1 gap-6 md:grid-cols-2">

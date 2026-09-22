@@ -2,6 +2,7 @@
     hx-post="{% url 'experience:profile' %}"
     hx-target="#experience"
     hx-swap="innerHTML"
+    data-guard="1"
     class="flex min-h-screen flex-col items-center justify-center gap-10 p-10 text-center"
     x-data="{ age: {{ form.age.value|default:25 }} }">
     <h1 class="text-6xl font-bold">আপনার সম্পর্কে বলুন</h1>

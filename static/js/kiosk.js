@@ -16,12 +16,16 @@
         this.arm();
       },
       get active() {
-        return document.getElementById("experience")?.dataset.guard === "1";
+        const experience = document.getElementById("experience");
+        return !!experience && !!experience.querySelector("[data-guard='1']");
       },
       arm() {
         clearTimeout(this.timer);
         clearTimeout(this.graceTimer);
-        if (!this.active) return;
+        if (!this.active) {
+          this.prompt = false;
+          return;
+        }
         this.timer = setTimeout(() => {
           this.prompt = true;
           this.graceTimer = setTimeout(() => {
