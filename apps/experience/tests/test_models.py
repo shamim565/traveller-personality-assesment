@@ -17,28 +17,6 @@ from apps.experience.models import (
 )
 
 
-@pytest.fixture
-def qv(db):
-    return QuestionnaireVersion.objects.create(name="Test", version="v1")
-
-
-@pytest.fixture
-def persona(db):
-    return Persona.objects.create(name="Heritage Hunter", slug="heritage_hunter")
-
-
-@pytest.fixture
-def question(qv):
-    return Question.objects.create(
-        questionnaire_version=qv, text_bn="প্রশ্ন?", order=1
-    )
-
-
-@pytest.fixture
-def answer(question):
-    return AnswerOption.objects.create(question=question, text_bn="উত্তর", order=1)
-
-
 def test_question_order_unique_per_version(qv):
     Question.objects.create(questionnaire_version=qv, text_bn="Q", order=1)
     with pytest.raises(IntegrityError):
