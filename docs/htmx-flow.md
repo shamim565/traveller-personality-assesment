@@ -88,7 +88,7 @@ hx-post="/experience/reset/"  hx-target="#experience"
 | `analyzing.html` | spinner + auto-complete trigger |
 | `result.html` | persona reveal, avatar, description, restart |
 | `error.html` | friendly recovery + Start Again |
-| `still_there.html` | overlay (shown by Alpine, not HTMX) |
+| still-there overlay | rendered in `base.html` outside `#experience`; controlled by the body-level Alpine `kioskSession` guard (survives partial swaps) |
 
 ## 4. HTMX Attributes Used (conventions)
 

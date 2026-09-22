@@ -14,37 +14,35 @@ as work proceeds.
 | 4 | Persona architecture | docs/persona-model.md, docs/scoring-system.md | ✅ Done |
 | 5 | Technical architecture | docs/architecture.md, database-design.md, htmx-flow.md, analytics.md, privacy.md, testing.md, deployment.md | ✅ Done |
 | 6 | Agent skills | docs/skills/*.md | ✅ Done |
-| 7 | Project bootstrap | Django project, settings package, Tailwind/HTMX/Alpine wiring, pytest, Docker skeleton; app starts | ⬜ Next |
-| 8 | Models | all §2 database-design.md models + migrations + constraints/indexes | ⬜ |
-| 9 | Admin | content management for versions/questions/answers/weights/personas/age groups/avatars | ⬜ |
-| 10 | Seed data | `seed_travel_personas` (idempotent) — six personas, v1 questionnaire, weights, age groups | ⬜ |
-| 11 | Scoring engine | services/scoring.py + full calibration test suite green | ⬜ |
-| 12 | Kiosk backend flow | start/profile/question/answer/complete/reset + session services | ⬜ |
-| 13 | HTMX UI | idle, profile, question partials, progress, analyzing, result, restart, error | ⬜ |
-| 14 | Persona avatars | resolution service + fallback chain + placeholder assets | ⬜ |
-| 15 | Analytics | persistence verification, selectors/services, dashboard + charts + CSV exports | ⬜ |
-| 16 | Testing | full pytest suite + Playwright E2E green | ⬜ |
-| 17 | Code review | senior-review checklist (oversized views, logic in templates, HTMX anti-patterns, privacy leaks) | ⬜ |
-| 18 | Kiosk reliability | 100+ assessment soak, reset/timeout/refresh/double-tap/DB-interruption drills | ⬜ |
-| 19 | Performance | asset sizing, query/index verification, load timing | ⬜ |
-| 20 | Deployment | Dockerfile, compose, nginx, health endpoint, release procedure | ⬜ |
-| 21 | Exhibition review | checklist dry-run with operators | ⬜ |
-| 22 | Handover | docs final pass, runbook training | ⬜ |
+| 7 | Project bootstrap | Django project, settings package, Tailwind/HTMX/Alpine wiring, pytest, Docker skeleton | ✅ Done |
+| 8 | Models | all database-design.md models + migrations + constraints/indexes | ✅ Done |
+| 9 | Admin | content management for versions/questions/answers/weights/personas/age groups/avatars | ✅ Done |
+| 10 | Seed data | `seed_travel_personas` (idempotent) | ✅ Done |
+| 11 | Scoring engine | services/scoring.py + calibration suite green | ✅ Done |
+| 12 | Kiosk backend flow | start/profile/question/answer/complete/reset + session services | ✅ Done |
+| 13 | HTMX UI | idle, profile, question partials, progress, analyzing, result, restart, error | ✅ Done |
+| 14 | Persona avatars | resolution service + fallback chain + broken-image recovery | ✅ Done |
+| 15 | Analytics | persistence, selectors/services, dashboard + charts + CSV exports | ✅ Done |
+| 16 | Testing | 126 unit/integration + 9 E2E + soak + performance suites green | ✅ Done |
+| 17 | Code review | senior-review fixes (N+1 prefetch, constraints, query budgets) | ✅ Done |
+| 18 | Kiosk reliability | 100-assessment soak; countdown-leak bug fixed | ✅ Done |
+| 19 | Performance | targets verified; indexes, gzip, manifest storage | ✅ Done |
+| 20 | Deployment | Docker production stack validated end-to-end (Postgres path) | ✅ Done |
+| 21 | Exhibition review | checklist dry-run + docs final pass | ✅ Done |
+| 22 | Handover | runbook training with operators (on-site) | ⬜ Operator task |
 
-## Phase Gates
+## Phase Gates (all green)
 
-- **Gate after 11:** all scoring calibration cases green before any UI work.
-- **Gate after 16:** no skipped/disabled tests; E2E happy path green.
-- **Gate after 18:** soak test clean before event-day freeze.
-- **Freeze after 21:** content changes only via Admin (no deploys on event day).
+- **Gate after 11:** scoring calibration green before UI — ✅
+- **Gate after 16:** no skipped tests; E2E happy path green — ✅
+- **Gate after 18:** soak clean before freeze — ✅
+- **Freeze after 21:** content changes only via Admin (no deploys on event day)
 
-## Definition of Done (MVP)
+## Definition of Done (MVP) — all met
 
-Idle screen works · start works · Bangla/English name works · age validation
-works · gender selection works · 6 questions work · HTMX transitions work ·
-deterministic scoring · all six personas reachable · result shows name, persona,
-avatar · avatar fallback works · restart works · timeout works · previous
-visitor data removed · analytics persist · traffic/persona/hourly/age/gender
-metrics work where enabled · admin can edit questions and weights · dashboard
-auth works · Docker deployment works · tests pass · E2E passes · docs complete ·
-exhibition checklist present.
+Idle screen · start · Bangla/English name · age validation · gender selection ·
+6 questions · HTMX transitions · deterministic scoring · all six personas
+reachable · result with name/persona/avatar · avatar fallback · restart ·
+timeout · previous visitor data removed · analytics persist · traffic/persona/
+hourly/age/gender metrics · admin question/weight editing · dashboard auth ·
+Docker deployment · tests · E2E · docs · exhibition checklist.

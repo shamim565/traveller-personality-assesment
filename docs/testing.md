@@ -93,3 +93,13 @@ shown.
 `pytest` must be green before merge; E2E runs on a schedule or pre-release.
 Never disable/skip failing tests to make the build green. Coverage goal:
 scoring 100%, services/selectors ≥ 90%, views/forms ≥ 80% (indicative, not a gate).
+
+## 9. Implemented Suite Layout
+
+- `apps/core/tests/`, `apps/experience/tests/`, `apps/analytics/tests/` —
+  unit + integration (scoring calibration, models/constraints, admin, session
+  flow, HTMX contracts, avatar fallback, analytics selectors, query budgets).
+- `tests/e2e/` — Playwright (marked `e2e`, excluded from default runs):
+  kiosk journeys (`test_kiosk_e2e.py`), 100-assessment soak
+  (`test_kiosk_soak.py`), performance regressions (`test_kiosk_performance.py`).
+- Run: `pytest` (fast) · `pytest -m e2e` (browser).

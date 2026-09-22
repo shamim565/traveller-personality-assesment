@@ -47,15 +47,28 @@ Urban Explorer · Culture Connector
 
 ## Status
 
-**Phase 1–6 complete: architecture foundation.** Implementation begins at
-Phase 7 (project bootstrap) — see development-plan.md.
+**Phases 1–21 complete.** The MVP is production-ready and Docker-validated
+(nginx → gunicorn → PostgreSQL). Remaining: Phase 22 on-site handover
+(staff training, final asset drop-in, kiosk setup per docs/exhibition-checklist.md).
 
-## Quickstart (once bootstrapped)
+## Quickstart
 
 ```bash
-cp .env.example .env            # fill in secrets
-docker compose up -d --build
-docker compose exec web python manage.py migrate
+cp .env.example .env            # fill in secrets (see docs/deployment.md)
+docker compose up -d --build    # web runs migrate + collectstatic on start
 docker compose exec web python manage.py seed_travel_personas
-# open http://localhost/ on the kiosk
+docker compose exec web python manage.py createsuperuser
+# kiosk: http://localhost/        dashboard: http://localhost/dashboard/
+```
+
+## Local development
+
+```bash
+python3 -m venv .venv && source .venv/bin/activate
+pip install -r requirements-dev.txt
+npm install && npm run build:css
+python manage.py migrate && python manage.py seed_travel_personas
+python manage.py runserver
+pytest                # unit + integration (fast)
+pytest -m e2e         # browser E2E incl. 100-assessment soak (slow)
 ```
