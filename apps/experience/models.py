@@ -259,6 +259,11 @@ class AssessmentAnswer(models.Model):
                 fields=["assessment", "question"], name="uniq_answer_assessment_question"
             ),
         ]
+        indexes = [
+            models.Index(
+                fields=["answer_option"], name="idx_asmanswer_option"
+            ),
+        ]
 
     def __str__(self):
         return f"{self.assessment_id} Q{self.question.order}"
