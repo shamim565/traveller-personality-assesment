@@ -21,7 +21,8 @@ wherever possible, persist only what analytics justify.
 ## 2. Name Handling
 
 - Name lives **only** in the Django session, from profile submission until the
-  result is rendered, then it is removed on completion/reset.
+  experience resets (manual restart, inactivity timeout, or a new visitor
+  starting). Nothing persists it to PostgreSQL.
 - Result screen may show the name because it is rendered in the same session
   context; nothing persists it.
 - If stakeholders later require name retention (e.g., social-wall), it requires:
