@@ -2,41 +2,57 @@
     hx-post="{% url 'experience:profile' %}"
     hx-target="#experience"
     hx-swap="innerHTML"
-    class="flex flex-col items-center gap-8 p-10">
-    <h1 class="text-5xl font-bold">আপনার সম্পর্কে বলুন</h1>
+    class="flex min-h-screen flex-col items-center justify-center gap-10 p-10 text-center"
+    x-data="{ age: {{ form.age.value|default:25 }} }">
+    <h1 class="text-6xl font-bold">আপনার সম্পর্কে বলুন</h1>
+    <p class="text-2xl text-white/70">একদম দ্রুত — মাত্র ৩টি তথ্য লাগবে</p>
 
-    <label class="text-3xl">
+    <label class="flex flex-col items-center gap-3 text-3xl">
         আপনার নাম
         <input
             type="text"
             name="name"
             maxlength="80"
             autocomplete="off"
-            class="mt-2 block rounded-xl px-4 py-3 text-3xl text-brand-night"
+            class="w-[30rem] rounded-2xl px-6 py-5 text-center text-4xl text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sand"
             value="{{ form.name.value|default:'' }}">
     </label>
     {% if form.name.errors %}
-        <p class="text-brand-sand">{{ form.name.errors|join:", " }}</p>
+        <p class="text-2xl text-brand-sand">{{ form.name.errors|join:", " }}</p>
     {% endif %}
 
-    <label class="text-3xl">
-        আপনার বয়স
-        <input
-            type="number"
-            name="age"
-            min="10"
-            max="100"
-            inputmode="numeric"
-            class="mt-2 block rounded-xl px-4 py-3 text-3xl text-brand-night"
-            value="{{ form.age.value|default:'' }}">
-    </label>
+    <div class="flex flex-col items-center gap-3 text-3xl">
+        <span>আপনার বয়স</span>
+        <div class="flex items-center gap-4">
+            <button type="button" @click="age = Math.max({{ K_MIN_AGE }}, age - 1)"
+                    class="h-20 w-20 rounded-2xl bg-white/15 text-4xl font-bold focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
+                    aria-label="বয়স কমান">−</button>
+            <input
+                type="number"
+                name="age"
+                min="{{ K_MIN_AGE }}"
+                max="{{ K_MAX_AGE }}"
+                inputmode="numeric"
+                x-model.number="age"
+                class="w-44 rounded-2xl px-4 py-5 text-center text-4xl text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sand">
+            <button type="button" @click="age = Math.min({{ K_MAX_AGE }}, age + 1)"
+                    class="h-20 w-20 rounded-2xl bg-white/15 text-4xl font-bold focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
+                    aria-label="বয়স বাড়ান">+</button>
+        </div>
+    </div>
     {% if form.age.errors %}
-        <p class="text-brand-sand">{{ form.age.errors|join:", " }}</p>
+        <p class="text-2xl text-brand-sand">{{ form.age.errors|join:", " }}</p>
     {% endif %}
 
-    <fieldset class="flex gap-6">
+    <fieldset class="flex gap-8">
+        <legend class="sr-only">আপনার লিঙ্গ</legend>
         {% for value, label in form.gender.field.choices %}
-            <label class="rounded-2xl border-4 border-white/30 px-8 py-5 text-2xl has-[:checked]:border-brand-sand">
+            <label x-data="kioskPress"
+                   @pointerdown="down()"
+                   @pointerup="up()"
+                   @pointerleave="up()"
+                   :class="pressed ? 'scale-95' : ''"
+                   class="flex w-56 flex-col items-center gap-2 rounded-3xl border-4 px-6 py-6 text-3xl transition-all duration-100 has-[:checked]:border-brand-sand has-[:checked]:bg-brand-sand/15">
                 <input type="radio" name="gender" value="{{ value }}" class="sr-only"
                     {% if form.gender.value == value %}checked{% endif %}>
                 {{ label }}
@@ -44,13 +60,18 @@
         {% endfor %}
     </fieldset>
     {% if form.gender.errors %}
-        <p class="text-brand-sand">{{ form.gender.errors|join:", " }}</p>
+        <p class="text-2xl text-brand-sand">{{ form.gender.errors|join:", " }}</p>
     {% endif %}
 
     <button
         type="submit"
-        class="rounded-2xl bg-brand-sand px-12 py-6 text-3xl font-bold text-brand-night"
+        x-data="kioskPress"
+        @pointerdown="down()"
+        @pointerup="up()"
+        @pointerleave="up()"
+        :class="pressed ? 'scale-95' : ''"
+        class="rounded-3xl bg-brand-sand px-16 py-7 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
         hx-disabled-elt="this">
-        Start the Quiz
+        কুইজ শুরু করুন
     </button>
 </form>

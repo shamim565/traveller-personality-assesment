@@ -11,7 +11,14 @@ class ProfileForm(forms.Form):
         min_value=settings.EXPERIENCE_MIN_AGE,
         max_value=settings.EXPERIENCE_MAX_AGE,
     )
-    gender = forms.ChoiceField(label="Gender", choices=Gender.choices)
+    gender = forms.ChoiceField(
+        label="Gender",
+        choices=[
+            (Gender.MALE, "পুরুষ"),
+            (Gender.FEMALE, "নারী"),
+            (Gender.PREFER_NOT_TO_SAY, "বলতে চাই না"),
+        ],
+    )
 
     def clean_name(self):
         name = self.cleaned_data["name"].strip()

@@ -1,9 +1,10 @@
-<div id="experience" class="flex flex-col items-center justify-center gap-8 p-10 text-center">
-    <div class="h-16 w-16 animate-spin rounded-full border-8 border-white/20 border-t-brand-sand"></div>
-    <p class="text-4xl font-bold">Analyzing your travel personality...</p>
+<div class="flex min-h-screen flex-col items-center justify-center gap-10 p-10 text-center">
+    <div class="h-20 w-20 animate-spin rounded-full border-8 border-white/20 border-t-brand-sand"></div>
+    <p class="text-5xl font-bold">Analyzing your travel personality...</p>
+    <p class="text-3xl text-white/70">আপনার ভ্রমণ ব্যক্তিত্ব খুঁজে বের করা হচ্ছে…</p>
     <div
         hx-post="{% url 'experience:complete' %}"
         hx-target="#experience"
         hx-swap="innerHTML"
-        hx-trigger="load delay:{{ analyzing_ms }}ms"></div>
+        hx-trigger="load delay:{{ K_ANALYZING_MS }}ms"></div>
 </div>

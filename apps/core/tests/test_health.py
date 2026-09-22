@@ -10,7 +10,7 @@ def test_health_endpoint_ok(db):
     assert payload["db"] is True
 
 
-def test_landing_renders():
+def test_landing_renders(db):
     response = Client().get("/")
     assert response.status_code == 200
 

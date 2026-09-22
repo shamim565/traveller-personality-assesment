@@ -7,10 +7,23 @@
     <link rel="stylesheet" href="{% static 'css/kiosk.css' %}">
     {% block head %}{% endblock %}
     <script src="{% static 'js/vendor/htmx.min.js' %}" defer></script>
+    <script src="{% static 'js/kiosk.js' %}" defer></script>
     <script src="{% static 'js/vendor/alpine.min.js' %}" defer></script>
 </head>
-<body class="min-h-screen bg-brand-night text-white antialiased"
-      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+<body class="min-h-screen select-none bg-brand-night text-white antialiased"
+      hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
+      x-data='kioskSession({ stillThere: {{ K_STILL_THERE_SECONDS }}, grace: {{ K_STILL_THERE_GRACE_SECONDS }}, resetUrl: "{% url 'experience:reset' %}" })'>
     {% block content %}{% endblock %}
+
+    <div x-show="prompt" x-cloak
+         class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-brand-night/95 p-10 text-center backdrop-blur"
+         role="alertdialog" aria-live="assertive">
+        <p class="text-6xl font-bold">Still there?</p>
+        <p class="text-4xl">আপনি কি এখনও এখানে আছেন?</p>
+        <button @click="prompt = false; arm()"
+                class="rounded-2xl bg-brand-sand px-14 py-7 text-4xl font-bold text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-white">
+            Continue — চালিয়ে যান
+        </button>
+    </div>
 </body>
 </html>

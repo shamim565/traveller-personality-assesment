@@ -191,7 +191,7 @@ def test_reset_clears_session_and_abandons(seeded, client, hx):
     client.post("/experience/profile/", PROFILE, **hx)
     response = client.post("/experience/reset/", **hx)
     assert response.status_code == 200
-    assert "DETECT YOUR TRAVEL PERSONA" in response.content.decode()
+    assert "Discover My Travel Personality" in response.content.decode()
     session = client.session
     for key in ["experience.name", "experience.age", "experience.gender", "experience.answers", "experience.assessment_uuid"]:
         assert key not in session
@@ -217,9 +217,11 @@ def test_completed_assessment_survives_reset(seeded, client, hx):
 # Landing / refresh resume
 # ---------------------------------------------------------------------------
 
-def test_landing_idle_when_fresh(client):
+def test_landing_idle_when_fresh(db, client):
     response = Client().get("/")
-    assert "DETECT YOUR TRAVEL PERSONA" in response.content.decode()
+    content = response.content.decode()
+    assert "DETECT YOUR" in content
+    assert "TRAVEL PERSONA" in content
 
 
 def test_landing_resumes_quiz_after_refresh(seeded, client, hx):

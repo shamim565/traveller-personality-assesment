@@ -1,12 +1,17 @@
-<div id="experience" class="flex flex-col items-center justify-center gap-8 p-10 text-center">
+<div class="flex min-h-screen flex-col items-center justify-center gap-8 p-10 text-center">
     <h1 class="text-5xl font-bold">Something went wrong.</h1>
-    <p class="text-3xl">Tap below to restart the experience.</p>
+    <p class="text-3xl">ট্যাপ করলেই আবার শুরু করা যাবে।</p>
     <button
-        class="rounded-2xl bg-brand-sand px-12 py-6 text-3xl font-bold text-brand-night"
+        x-data="kioskPress"
+        @pointerdown="down()"
+        @pointerup="up()"
+        @pointerleave="up()"
+        :class="pressed ? 'scale-95' : ''"
+        class="rounded-3xl bg-brand-sand px-14 py-7 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
         hx-post="{% url 'experience:reset' %}"
         hx-target="#experience"
         hx-swap="innerHTML"
         hx-disabled-elt="this">
-        Start Again
+        Start Again — আবার শুরু করুন
     </button>
 </div>
