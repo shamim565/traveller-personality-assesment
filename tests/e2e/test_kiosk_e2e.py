@@ -156,6 +156,7 @@ def test_stale_session_shows_friendly_recovery(kiosk_page, seeded):
     page = kiosk_page
     start_quiz(page)
     answer_first(page)
+    page.get_by_text("প্রশ্ন 2 / 6").wait_for(timeout=6000)
     page.context.clear_cookies(name="sessionid")
     page.locator("button[hx-post='/experience/answer/']").first.click()
     page.get_by_text("Something went wrong.", exact=False).wait_for(timeout=6000)

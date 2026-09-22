@@ -43,10 +43,10 @@
     Alpine.data("kioskCountdown", (seconds, resetUrl) => ({
       remaining: seconds,
       init() {
-        const id = setInterval(() => {
+        this.intervalId = setInterval(() => {
           this.remaining -= 1;
           if (this.remaining <= 0) {
-            clearInterval(id);
+            clearInterval(this.intervalId);
             if (typeof htmx !== "undefined") {
               htmx.ajax("POST", resetUrl, {
                 target: "#experience",
@@ -55,6 +55,9 @@
             }
           }
         }, 1000);
+      },
+      destroy() {
+        clearInterval(this.intervalId);
       },
     }));
 
