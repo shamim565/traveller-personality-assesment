@@ -74,7 +74,7 @@ without code changes. The seeded matrix below is the v1 calibration.
 | Heritage Hunter | 20 | Q1b4 + Q2c4 + Q3b4 + Q4b4 + Q6b4 |
 | Beach Lover | 18 | Q1a4 + Q2a4 + Q3a3 + Q4a3 + Q6a4 |
 | Adventure Seeker | 17 | Q1c3 + Q2b2 + Q3c4 + Q4c4 + Q6c4 |
-| Nature Explorer | 11 | Q1c3 + Q2b4 + Q3a2 + Q4a1 + Q6a1 |
+| Nature Explorer | 12 | Q1c3 + Q2b4 + Q3a2 + Q4a1 + Q6c2 |
 | Urban Explorer | 20 | Q1e4 + Q2e4 + Q3e4 + Q4e4 + Q6e4 |
 | Culture Connector | 20 | Q1d4 + Q2d4 + Q3d4 + Q4d4 + Q6d4 |
 
@@ -137,7 +137,7 @@ stakeholders later request them; any change requires a new questionnaire version
 | Pure Culture | 1d, 2d, 3d, 4d, 5(any), 6d | Culture Connector (C20, H4, N2) |
 | Heritage + Culture | 1b, 2d, 3b, 4d, 5(any), 6d | Culture Connector (C14, H10) |
 | Nature + Adventure (thrill) | 1c, 2b, 3c, 4c, 5(any), 6c | Adventure Seeker (A17, N12) |
-| Beach + Nature | 1a, 2b, 3a, 4a, 5(any), 6a | Beach Lover (B14, N9) |
+| Beach + Nature | 1a, 2b, 3a, 4a, 5(any), 6a | Beach Lover (B14, N8) |
 | Urban + Culture | 1e, 2d, 3e, 4d, 5(any), 6e | Urban Explorer (U12, C10) |
 | Tie exercise (contrived) | see testing.md | deterministic per §4 chain |
 
