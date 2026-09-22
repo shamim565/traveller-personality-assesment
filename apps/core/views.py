@@ -1,6 +1,5 @@
 from django.db import connection
 from django.http import JsonResponse
-from django.shortcuts import render
 
 
 def health(request):
@@ -11,7 +10,3 @@ def health(request):
     except Exception:
         db_ok = False
     return JsonResponse({"status": "ok" if db_ok else "degraded", "db": db_ok})
-
-
-def landing(request):
-    return render(request, "core/bootstrap.html")

@@ -1,0 +1,17 @@
+{% include "partials/progress.html" %}
+<div class="flex flex-col items-center gap-10 p-10">
+    <h1 class="max-w-4xl text-center text-5xl font-bold">{{ question.text_bn }}</h1>
+    <div class="grid w-full max-w-5xl grid-cols-1 gap-6 md:grid-cols-2">
+        {% for option in options %}
+            <button
+                class="rounded-2xl bg-white/10 px-8 py-7 text-3xl transition-colors hover:bg-white/20"
+                hx-post="{% url 'experience:answer' %}"
+                hx-vals='{"answer_id": {{ option.id }}}'
+                hx-target="#experience"
+                hx-swap="innerHTML"
+                hx-disabled-elt="this">
+                {{ option.text_bn }}
+            </button>
+        {% endfor %}
+    </div>
+</div>

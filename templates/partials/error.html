@@ -1,0 +1,12 @@
+<div id="experience" class="flex flex-col items-center justify-center gap-8 p-10 text-center">
+    <h1 class="text-5xl font-bold">Something went wrong.</h1>
+    <p class="text-3xl">Tap below to restart the experience.</p>
+    <button
+        class="rounded-2xl bg-brand-sand px-12 py-6 text-3xl font-bold text-brand-night"
+        hx-post="{% url 'experience:reset' %}"
+        hx-target="#experience"
+        hx-swap="innerHTML"
+        hx-disabled-elt="this">
+        Start Again
+    </button>
+</div>

@@ -1,0 +1,20 @@
+{% load static %}<div id="experience" class="flex flex-col items-center justify-center gap-6 p-10 text-center">
+    {% if name %}
+        <p class="text-4xl">{{ name }},</p>
+    {% endif %}
+    <h1 class="text-7xl font-bold">YOU ARE A</h1>
+    <h2 class="text-8xl font-bold text-brand-sand">{{ persona.name|upper }}!</h2>
+    <img src="{% static avatar %}" alt="{{ persona.name }} avatar" class="h-64 w-64 rounded-3xl object-cover">
+    <p class="max-w-2xl text-3xl">{{ persona.short_description_bn }}</p>
+    {% if persona.keywords_bn %}
+        <p class="text-2xl">{{ persona.keywords_bn }}</p>
+    {% endif %}
+    <button
+        class="rounded-2xl bg-brand-sand px-12 py-6 text-3xl font-bold text-brand-night"
+        hx-post="{% url 'experience:reset' %}"
+        hx-target="#experience"
+        hx-swap="innerHTML"
+        hx-disabled-elt="this">
+        Start Again
+    </button>
+</div>

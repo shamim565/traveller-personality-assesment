@@ -1,4 +1,5 @@
 import pytest
+from django.core.management import call_command
 
 from apps.experience.models import (
     AnswerOption,
@@ -7,6 +8,12 @@ from apps.experience.models import (
     Question,
     QuestionnaireVersion,
 )
+
+
+@pytest.fixture
+def seeded(db):
+    call_command("seed_travel_personas", verbosity=0)
+    return QuestionnaireVersion.objects.get()
 
 
 @pytest.fixture

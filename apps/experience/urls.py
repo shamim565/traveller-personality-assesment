@@ -1,5 +1,14 @@
 from django.urls import path
 
+from apps.experience import views
+
 app_name = "experience"
 
-urlpatterns = []
+urlpatterns = [
+    path("", views.landing, name="landing"),
+    path("experience/start/", views.start, name="start"),
+    path("experience/profile/", views.profile, name="profile"),
+    path("experience/answer/", views.answer, name="answer"),
+    path("experience/complete/", views.complete, name="complete"),
+    path("experience/reset/", views.reset, name="reset"),
+]

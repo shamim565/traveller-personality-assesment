@@ -1,0 +1,9 @@
+<div id="experience" class="flex flex-col items-center justify-center gap-8 p-10 text-center">
+    <div class="h-16 w-16 animate-spin rounded-full border-8 border-white/20 border-t-brand-sand"></div>
+    <p class="text-4xl font-bold">Analyzing your travel personality...</p>
+    <div
+        hx-post="{% url 'experience:complete' %}"
+        hx-target="#experience"
+        hx-swap="innerHTML"
+        hx-trigger="load delay:{{ analyzing_ms }}ms"></div>
+</div>

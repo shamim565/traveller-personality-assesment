@@ -1,0 +1,12 @@
+<div id="experience" class="flex flex-col items-center justify-center gap-10 p-10 text-center">
+    <h1 class="text-6xl font-bold">DETECT YOUR TRAVEL PERSONA</h1>
+    <p class="text-3xl">Discover what kind of traveller you really are.</p>
+    <button
+        class="rounded-2xl bg-brand-sand px-12 py-6 text-3xl font-bold text-brand-night"
+        hx-post="{% url 'experience:start' %}"
+        hx-target="#experience"
+        hx-swap="innerHTML"
+        hx-disabled-elt="this">
+        Discover My Travel Personality
+    </button>
+</div>

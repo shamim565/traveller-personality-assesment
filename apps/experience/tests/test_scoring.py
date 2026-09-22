@@ -24,12 +24,6 @@ PERSONAS = [
 
 
 @pytest.fixture
-def seeded(db):
-    call_command("seed_travel_personas", verbosity=0)
-    return QuestionnaireVersion.objects.get()
-
-
-@pytest.fixture
 def personas(db):
     return {slug: Persona.objects.create(name=name, slug=slug) for slug, name in PERSONAS}
 
