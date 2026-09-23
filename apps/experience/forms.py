@@ -16,7 +16,6 @@ class ProfileForm(forms.Form):
         choices=[
             (Gender.MALE, "পুরুষ"),
             (Gender.FEMALE, "নারী"),
-            (Gender.PREFER_NOT_TO_SAY, "বলতে চাই না"),
         ],
     )
 

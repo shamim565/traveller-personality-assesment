@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 {% block content %}
-<main id="experience" data-guard="1" aria-live="polite">
-    {% include "partials/profile_form.html" %}
-</main>
+<div class="flex min-h-screen flex-col">
+    {% include "partials/branding_header.html" with compact=True %}
+    <main id="experience" data-guard="1" aria-live="polite" class="flex flex-1 flex-col">
+        {% include "partials/profile_form.html" %}
+    </main>
+</div>
 {% endblock %}

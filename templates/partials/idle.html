@@ -1,16 +1,9 @@
 {% load static avatars %}
 {% static 'avatars/global-default.svg' as fallback_avatar %}
-<div class="relative flex min-h-screen flex-col overflow-hidden">
-    <img src="{% static 'branding/kv/kv-placeholder.jpg' %}" alt=""
+<div class="relative flex flex-1 flex-col overflow-hidden">
+    <img src="{% static 'branding/kv/kv-placeholder.webp' %}" alt=""
         class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-45">
     <div class="absolute inset-0 bg-gradient-to-b from-brand-night/40 via-brand-night/70 to-brand-night"></div>
-
-    <header class="relative z-10 flex items-center justify-between p-8">
-        <img src="{% static 'branding/logos/govt.png' %}" alt="Organizer" class="h-20">
-        <img src="{% static 'branding/world-tourism-day/world-tourism-day-logo.png' %}" alt="World Tourism Day 2026"
-            class="h-28 animate-float-slow">
-        <img src="{% static 'branding/logos/BG-tourism-board.png' %}" alt="Sponsor" class="h-20">
-    </header>
 
     <main class="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-10 text-center">
         <h1 class="animate-float-slow text-7xl font-bold leading-tight md:text-8xl">DETECT YOUR <span

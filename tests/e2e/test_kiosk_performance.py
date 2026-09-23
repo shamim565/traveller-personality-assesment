@@ -53,7 +53,9 @@ def test_kiosk_page_weight_and_no_chartjs(live_server, page):
     page.on("response", on_response)
     page.goto(live_server.url, wait_until="load")
     total_bytes = sum(sizes)
-    assert total_bytes < 300_000, f"kiosk page too heavy: {total_bytes} bytes"
+    # Real campaign photography (KV webp + institutional logos) replaced the
+    # tiny placeholder SVGs; ~375KB keeps the LAN kiosk load well under 1s.
+    assert total_bytes < 400_000, f"kiosk page too heavy: {total_bytes} bytes"
     assert chart_requests == []
 
 

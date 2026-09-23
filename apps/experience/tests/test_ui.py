@@ -20,7 +20,7 @@ def hx():
 
 def test_idle_has_branding_and_persona_strip(seeded):
     content = idle_page()
-    assert "branding/kv/kv-placeholder.jpg" in content
+    assert "branding/kv/kv-placeholder.webp" in content
     assert "branding/logos/govt.png" in content
     assert "branding/logos/BG-tourism-board.png" in content
     assert "world-tourism-day/world-tourism-day-logo.png" in content
@@ -45,7 +45,6 @@ def test_profile_page_has_stepper_and_gender_cards(seeded, client, hx):
     assert "আপনার বয়স" in content
     assert "পুরুষ" in content
     assert "নারী" in content
-    assert "বলতে চাই না" in content
     assert "kioskPress" in content
 
 
@@ -61,6 +60,33 @@ def test_base_binds_kiosk_session_guard(db, client):
     content = client.get("/").content.decode()
     assert "kioskSession" in content
     assert "/experience/reset/" in content
+
+
+def header_paths(content):
+    return all(
+        path in content
+        for path in [
+            "branding/logos/govt.png",
+            "world-tourism-day/world-tourism-day-logo.png",
+            "branding/logos/BG-tourism-board.png",
+        ]
+    )
+
+
+def test_header_visible_on_all_kiosk_pages(seeded, client, hx):
+    assert header_paths(client.get("/").content.decode())
+
+    client.post("/experience/start/", **hx)
+    assert header_paths(client.get("/").content.decode())
+
+    client.post("/experience/profile/", PROFILE, **hx)
+    assert header_paths(client.get("/").content.decode())
+
+    for question in seeded.questions.order_by("order"):
+        option = question.options.filter(is_active=True).first()
+        client.post("/experience/answer/", {"answer_id": option.id}, **hx)
+    client.post("/experience/complete/", **hx)
+    assert header_paths(client.get("/").content.decode())
 
 
 def test_result_page_has_countdown_and_avatar(seeded, client, hx):

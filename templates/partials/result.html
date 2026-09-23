@@ -1,49 +1,49 @@
 {% load static %}
 {% url 'experience:reset' as reset_url %}
 {% static 'avatars/global-default.svg' as fallback_avatar %}
-<div class="relative flex min-h-screen flex-col items-center justify-center gap-8 p-10 text-center">
-    <img src="{% static 'branding/kv/kv-placeholder.jpg' %}" alt=""
+<div class="relative flex flex-1 flex-col items-center justify-center gap-5 p-6 text-center">
+    <img src="{% static 'branding/kv/kv-placeholder.webp' %}" alt=""
          class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-25">
     <div class="absolute inset-0 bg-gradient-to-b from-brand-night/60 via-brand-night/85 to-brand-night"></div>
 
     <div x-data="kioskReveal" x-show="show" x-transition.scale.origin.top.duration.700ms
-         class="relative z-10 flex flex-col items-center gap-7 rounded-[3rem] border-4 border-white/15 bg-white/5 px-14 py-12 backdrop-blur-sm md:px-20">
+         class="relative z-10 flex flex-col items-center gap-5 rounded-[2.5rem] border-4 border-white/15 bg-white/5 px-14 py-8 backdrop-blur-sm md:px-20">
         {% if name %}
-            <p class="text-5xl font-bold">{{ name }},</p>
+            <p class="text-4xl font-bold">{{ name }},</p>
         {% endif %}
-        <p class="text-3xl tracking-[0.35em] text-white/80">YOU ARE A</p>
-        <h1 class="text-7xl font-bold text-brand-sand md:text-8xl">{{ persona.name|upper }}!</h1>
+        <p class="text-2xl tracking-[0.35em] text-white/80">YOU ARE A</p>
+        <h1 class="text-6xl font-bold text-brand-sand md:text-7xl">{{ persona.name|upper }}!</h1>
 
         <img src="{% static avatar %}" alt="{{ persona.name }} avatar"
              @error="$el.src = '{{ fallback_avatar }}'"
-             class="h-56 w-56 rounded-3xl border-4 border-brand-sand object-cover md:h-64 md:w-64">
+             class="h-48 w-48 rounded-3xl border-4 border-brand-sand object-cover md:h-52 md:w-52">
 
-        <p class="max-w-2xl text-3xl leading-snug md:text-4xl">{{ persona.short_description_bn }}</p>
+        <p class="max-w-2xl text-2xl leading-snug md:text-3xl">{{ persona.short_description_bn }}</p>
 
         {% if keywords %}
-            <div class="flex flex-wrap items-center justify-center gap-4">
+            <div class="flex flex-wrap items-center justify-center gap-3">
                 {% for keyword in keywords %}
-                    <span class="rounded-full bg-brand-sand/15 px-6 py-2 text-2xl">{{ keyword }}</span>
+                    <span class="rounded-full bg-brand-sand/15 px-5 py-1.5 text-xl">{{ keyword }}</span>
                 {% endfor %}
             </div>
         {% endif %}
     </div>
 
-    <div class="relative z-10 flex flex-col items-center gap-4">
+    <div class="relative z-10 flex flex-col items-center gap-3">
         <button
             x-data="kioskPress"
             @pointerdown="down()"
             @pointerup="up()"
             @pointerleave="up()"
             :class="pressed ? 'scale-95' : ''"
-            class="rounded-3xl bg-brand-sand px-14 py-7 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
+            class="rounded-3xl bg-brand-sand px-14 py-6 text-3xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
             hx-post="{% url 'experience:reset' %}"
             hx-target="#experience"
             hx-swap="innerHTML"
             hx-disabled-elt="this">
             Start Again — আবার শুরু করুন
         </button>
-        <p class="text-2xl text-white/70"
+        <p class="text-xl text-white/70"
            x-data="kioskCountdown({{ K_RESET_DELAY_SECONDS }}, '{{ reset_url }}')">
             <span x-text="remaining"></span> সেকেন্ড পরে স্বয়ংক্রিয়ভাবে রিসেট হবে
         </p>
