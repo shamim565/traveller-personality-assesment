@@ -20,10 +20,10 @@ def hx():
 
 def test_idle_has_branding_and_persona_strip(seeded):
     content = idle_page()
-    assert "branding/kv/kv-placeholder.svg" in content
-    assert "organizer-placeholder.svg" in content
-    assert "sponsor-placeholder.svg" in content
-    assert "wtd-mark-placeholder.svg" in content
+    assert "branding/kv/kv-placeholder.jpg" in content
+    assert "branding/logos/govt.png" in content
+    assert "branding/logos/BG-tourism-board.png" in content
+    assert "world-tourism-day/world-tourism-day-logo.png" in content
     assert "#WorldTourismDay2026" in content
     for persona in seeded_avatar_slugs():
         assert f"avatars/{persona}/neutral.svg" in content

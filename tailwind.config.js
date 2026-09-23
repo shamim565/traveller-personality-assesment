@@ -8,7 +8,6 @@ module.exports = {
     extend: {
       fontFamily: {
         kiosk: [
-          "Noto Sans Bengali",
           "Hind Siliguri",
           "system-ui",
           "Segoe UI",

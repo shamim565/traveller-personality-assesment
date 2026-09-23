@@ -11,7 +11,7 @@ responsive 1920×1080 → tablet layouts.
    once in `tailwind.config` theme extension — no ad-hoc hex values in templates.
 2. Type scale for a standing visitor: headline ≥ text-5xl, question ≥ text-4xl,
    answer cards ≥ text-2xl; generous line-height for Bangla conjuncts.
-3. Self-host `Noto Sans Bengali` (OFL, license file bundled) with system font
+3. Self-host `Hind Siliguri` (OFL, license file bundled) with system font
    fallbacks; verify no tofu glyphs on event hardware.
 4. Answer cards: large tap area, clear selected/pressed states (Alpine), strong
    contrast, focus-visible rings; never color-only state.

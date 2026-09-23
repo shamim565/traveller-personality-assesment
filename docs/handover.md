@@ -14,7 +14,7 @@ A production-ready, deterministic travel-persona kiosk experience:
   Explorer, Urban Explorer, Culture Connector — deterministic weighted scoring
   (no AI calls, works fully offline)
 - Touch-first UI (44 px+ targets, no scrolling, 1920×1080 primary),
-  self-hosted Noto Sans Bengali, vendored htmx/Alpine/Chart.js
+  self-hosted Hind Siliguri, vendored htmx/Alpine/Chart.js
 - Staff analytics dashboard (`/dashboard/`) with traffic, completion, persona,
   hourly, age/gender, companion, kiosk and answer insights + CSV exports
 - Django Admin content management: questions, answers, scoring weights,

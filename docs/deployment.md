@@ -94,7 +94,7 @@ curl http://<server-ip>/health/   # {"status": "ok", "db": true}
 ## 7. Static Assets & Fonts
 
 - Tailwind built at image build time; output collected into the static volume.
-- Self-host `Noto Sans Bengali` (OFL) in `static/fonts/` with system fallbacks;
+- Self-host `Hind Siliguri` (OFL) in `static/fonts/` with system fallbacks;
   license file kept alongside.
 - Avatar/branding assets deployed as static files with the fallback chain
   (database-design.md §PersonaAvatar).

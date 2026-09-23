@@ -1,31 +1,25 @@
 {% load static avatars %}
 {% static 'avatars/global-default.svg' as fallback_avatar %}
 <div class="relative flex min-h-screen flex-col overflow-hidden">
-    <img src="{% static 'branding/kv/kv-placeholder.svg' %}"
-         alt=""
-         class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-45">
+    <img src="{% static 'branding/kv/kv-placeholder.jpg' %}" alt=""
+        class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-45">
     <div class="absolute inset-0 bg-gradient-to-b from-brand-night/40 via-brand-night/70 to-brand-night"></div>
 
     <header class="relative z-10 flex items-center justify-between p-8">
-        <img src="{% static 'branding/logos/organizer-placeholder.svg' %}" alt="Organizer" class="h-20">
-        <img src="{% static 'branding/world-tourism-day/wtd-mark-placeholder.svg' %}" alt="World Tourism Day 2026" class="h-28 animate-float-slow">
-        <img src="{% static 'branding/logos/sponsor-placeholder.svg' %}" alt="Sponsor" class="h-20">
+        <img src="{% static 'branding/logos/govt.png' %}" alt="Organizer" class="h-20">
+        <img src="{% static 'branding/world-tourism-day/world-tourism-day-logo.png' %}" alt="World Tourism Day 2026"
+            class="h-28 animate-float-slow">
+        <img src="{% static 'branding/logos/BG-tourism-board.png' %}" alt="Sponsor" class="h-20">
     </header>
 
     <main class="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-10 text-center">
-        <h1 class="animate-float-slow text-7xl font-bold leading-tight md:text-8xl">DETECT YOUR <span class="text-brand-sand">TRAVEL PERSONA</span></h1>
+        <h1 class="animate-float-slow text-7xl font-bold leading-tight md:text-8xl">DETECT YOUR <span
+                class="text-brand-sand">TRAVEL PERSONA</span></h1>
         <p class="text-3xl md:text-4xl">Discover what kind of traveller you really are.</p>
-        <button
-            x-data="kioskPress"
-            @pointerdown="down()"
-            @pointerup="up()"
-            @pointerleave="up()"
+        <button x-data="kioskPress" @pointerdown="down()" @pointerup="up()" @pointerleave="up()"
             :class="pressed ? 'scale-95' : ''"
             class="rounded-3xl bg-brand-sand px-16 py-8 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
-            hx-post="{% url 'experience:start' %}"
-            hx-target="#experience"
-            hx-swap="innerHTML"
-            hx-disabled-elt="this">
+            hx-post="{% url 'experience:start' %}" hx-target="#experience" hx-swap="innerHTML" hx-disabled-elt="this">
             Discover My Travel Personality
         </button>
     </main>
@@ -33,13 +27,13 @@
     <footer class="relative z-10 flex flex-col items-center gap-6 p-8">
         <div class="flex flex-wrap items-center justify-center gap-6">
             {% for persona in personas %}
-                <div class="flex flex-col items-center gap-2 opacity-90">
-                    {% avatar_image persona as persona_avatar %}
-                    <img src="{% static persona_avatar %}" alt="{{ persona.name }}"
-                         @error="$el.src = '{{ fallback_avatar }}'"
-                         class="h-24 w-24 rounded-full border-4 border-white/25 object-cover">
-                    <span class="text-lg">{{ persona.name }}</span>
-                </div>
+            <div class="flex flex-col items-center gap-2 opacity-90">
+                {% avatar_image persona as persona_avatar %}
+                <img src="{% static persona_avatar %}" alt="{{ persona.name }}"
+                    @error="$el.src = '{{ fallback_avatar }}'"
+                    class="h-24 w-24 rounded-full border-4 border-white/25 object-cover">
+                <span class="text-lg">{{ persona.name }}</span>
+            </div>
             {% endfor %}
         </div>
         <p class="text-xl text-white/70">#WorldTourismDay2026</p>
