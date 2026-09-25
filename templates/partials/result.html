@@ -2,10 +2,6 @@
 {% url 'experience:reset' as reset_url %}
 {% static 'avatars/global-default.svg' as fallback_avatar %}
 <div class="relative flex flex-1 flex-col items-center justify-center gap-5 p-6 text-center">
-    <img src="{% static 'branding/kv/kv-placeholder.webp' %}" alt=""
-         class="kv-zoom absolute inset-0 h-full w-full object-cover opacity-25">
-    <div class="absolute inset-0 bg-gradient-to-b from-brand-night/60 via-brand-night/85 to-brand-night"></div>
-
     <div x-data="kioskReveal" x-show="show" x-transition.scale.origin.top.duration.700ms
          class="relative z-10 flex flex-col items-center gap-5 rounded-[2.5rem] border-4 border-white/15 bg-white/5 px-14 py-8 backdrop-blur-sm md:px-20">
         {% if name %}

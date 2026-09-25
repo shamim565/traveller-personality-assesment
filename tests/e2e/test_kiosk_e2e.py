@@ -40,10 +40,12 @@ def test_happy_path_and_restart_clears_data(kiosk_page, seeded):
     page = kiosk_page
     expect(page.get_by_text("DETECT YOUR")).to_be_visible()
     expect(page.locator('header img[alt="Organizer"]')).to_be_visible()
+    expect(page.locator('img[aria-hidden="true"]').first).to_be_visible()
     complete_flow(page)
     expect(page.get_by_text("Sazid,", exact=False)).to_be_visible()
     expect(page.locator('img[alt$="avatar"]')).to_be_visible()
     expect(page.locator('header img[alt="Organizer"]')).to_be_visible()
+    expect(page.locator('img[aria-hidden="true"]').first).to_be_visible()
 
     page.get_by_role("button", name=re.compile("Start Again")).click()
     expect(page.get_by_text("DETECT YOUR")).to_be_visible()

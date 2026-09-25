@@ -1,3 +1,5 @@
+import re
+
 import pytest
 from django.test import Client
 
@@ -87,6 +89,32 @@ def test_header_visible_on_all_kiosk_pages(seeded, client, hx):
         client.post("/experience/answer/", {"answer_id": option.id}, **hx)
     client.post("/experience/complete/", **hx)
     assert header_paths(client.get("/").content.decode())
+
+
+def test_background_present_on_all_kiosk_pages(seeded, client, hx):
+    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+
+    client.post("/experience/start/", **hx)
+    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+
+    client.post("/experience/profile/", PROFILE, **hx)
+    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+
+    for question in seeded.questions.order_by("order"):
+        option = question.options.filter(is_active=True).first()
+        client.post("/experience/answer/", {"answer_id": option.id}, **hx)
+    client.post("/experience/complete/", **hx)
+    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+
+
+def test_compact_header_has_no_background_band(seeded, client, hx):
+    client.post("/experience/start/", **hx)
+    content = client.get("/").content.decode()
+    header_tags = re.findall(r"<header[^>]*>", content)
+    assert header_tags, "header not found"
+    for tag in header_tags:
+        assert "bg-brand-night" not in tag
+        assert "backdrop-blur" not in tag
 
 
 def test_result_page_has_countdown_and_avatar(seeded, client, hx):

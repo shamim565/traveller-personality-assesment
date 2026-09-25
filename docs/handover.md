@@ -54,6 +54,13 @@ Print and follow `docs/exhibition-checklist.md`. Highlights:
 
 Current KV/logos/avatars are neutral placeholders:
 
+- **Per-page background images:** each kiosk page includes
+  `templates/partials/page_background.html` from its wrapper
+  (`templates/kiosk/<page>.html`) with an `image="branding/…"` path — change
+  that one path per page to use a different photo (drop files in
+  `static/backgrounds/` or `static/branding/kv/`, rebuild the image, then
+  `docker compose exec web python manage.py collectstatic --noinput`).
+  Overlay strength is per page too (`overlay="light|medium|dark"`).
 - `static/branding/kv/`, `static/branding/logos/`,
   `static/branding/world-tourism-day/` — drop in final files, then
   `docker compose exec web python manage.py collectstatic --noinput`

@@ -11,7 +11,7 @@
                 @pointerup="up()"
                 @pointerleave="up()"
                 :class="pressed ? 'scale-[0.97]' : ''"
-                class="rounded-3xl border-4 border-white/15 bg-white/10 px-8 py-9 text-3xl leading-snug transition-all duration-100 hover:border-white/40 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sand md:text-4xl"
+                class="rounded-3xl border-4 border-white/15 bg-brand-night/70 px-8 py-9 text-3xl leading-snug backdrop-blur-sm transition-all duration-100 hover:border-white/40 focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sand md:text-4xl"
                 hx-post="{% url 'experience:answer' %}"
                 hx-vals='{"answer_id": {{ option.id }}}'
                 hx-target="#experience"
