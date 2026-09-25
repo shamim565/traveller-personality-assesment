@@ -50,20 +50,18 @@ Print and follow `docs/exhibition-checklist.md`. Highlights:
 - Content changes after freeze: Admin only (questions/weights), never code
   deploys on event day
 
-## 4. Replacing Placeholder Assets
-
-Current KV/logos/avatars are neutral placeholders:
+## 4. Replacing Page Backgrounds / Branding Assets
 
 - **Per-page background images:** each kiosk page includes
   `templates/partials/page_background.html` from its wrapper
-  (`templates/kiosk/<page>.html`) with an `image="branding/…"` path — change
-  that one path per page to use a different photo (drop files in
-  `static/backgrounds/` or `static/branding/kv/`, rebuild the image, then
-  `docker compose exec web python manage.py collectstatic --noinput`).
-  Overlay strength is per page too (`overlay="light|medium|dark"`).
-- `static/branding/kv/`, `static/branding/logos/`,
-  `static/branding/world-tourism-day/` — drop in final files, then
-  `docker compose exec web python manage.py collectstatic --noinput`
+  (`templates/kiosk/<page>.html`, line 4) with an `image="backgrounds/…"` path
+  and an overlay strength (`overlay="light|medium|dark"`) — change one line per
+  page. Current pages use `backgrounds/{idle,profile,quiz,analyzing,result,error}.webp`;
+  `spare-1…4.webp` are unconverted extras. To swap: drop an optimized WebP
+  (1920×1080, ≤~300KB) into `static/backgrounds/`, edit the path, rebuild the
+  image, then `docker compose exec web python manage.py collectstatic --noinput`.
+- **Logos/KV:** `static/branding/logos/`, `static/branding/world-tourism-day/`,
+  `static/branding/kv/` — drop in final files, then collectstatic.
 - Avatars: add rows via **Admin → PersonaAvatar** (persona + gender +
   age group + static path + is_default) with files in
   `static/avatars/<persona_slug>/`; the fallback chain (exact → gender

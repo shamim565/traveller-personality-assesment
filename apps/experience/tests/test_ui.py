@@ -22,7 +22,7 @@ def hx():
 
 def test_idle_has_branding_and_persona_strip(seeded):
     content = idle_page()
-    assert "branding/kv/kv-placeholder.webp" in content
+    assert "backgrounds/idle.webp" in content
     assert "branding/logos/govt.png" in content
     assert "branding/logos/BG-tourism-board.png" in content
     assert "world-tourism-day/world-tourism-day-logo.png" in content
@@ -92,19 +92,19 @@ def test_header_visible_on_all_kiosk_pages(seeded, client, hx):
 
 
 def test_background_present_on_all_kiosk_pages(seeded, client, hx):
-    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+    assert "backgrounds/idle.webp" in client.get("/").content.decode()
 
     client.post("/experience/start/", **hx)
-    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+    assert "backgrounds/profile.webp" in client.get("/").content.decode()
 
     client.post("/experience/profile/", PROFILE, **hx)
-    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+    assert "backgrounds/quiz.webp" in client.get("/").content.decode()
 
     for question in seeded.questions.order_by("order"):
         option = question.options.filter(is_active=True).first()
         client.post("/experience/answer/", {"answer_id": option.id}, **hx)
     client.post("/experience/complete/", **hx)
-    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
+    assert "backgrounds/result.webp" in client.get("/").content.decode()
 
 
 def test_compact_header_has_no_background_band(seeded, client, hx):
