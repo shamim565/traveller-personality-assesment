@@ -22,7 +22,7 @@ def hx():
 
 def test_idle_has_branding_and_persona_strip(seeded):
     content = idle_page()
-    assert "backgrounds/idle.webp" in content
+    assert "branding/kv/kv-placeholder.webp" in content
     assert "branding/logos/govt.png" in content
     assert "branding/logos/BG-tourism-board.png" in content
     assert "world-tourism-day/world-tourism-day-logo.png" in content
@@ -92,19 +92,61 @@ def test_header_visible_on_all_kiosk_pages(seeded, client, hx):
 
 
 def test_background_present_on_all_kiosk_pages(seeded, client, hx):
-    assert "backgrounds/idle.webp" in client.get("/").content.decode()
+    assert "branding/kv/kv-placeholder.webp" in client.get("/").content.decode()
 
     client.post("/experience/start/", **hx)
     assert "backgrounds/profile.webp" in client.get("/").content.decode()
 
     client.post("/experience/profile/", PROFILE, **hx)
-    assert "backgrounds/quiz.webp" in client.get("/").content.decode()
+    assert "backgrounds/q1.webp" in client.get("/").content.decode()
 
     for question in seeded.questions.order_by("order"):
         option = question.options.filter(is_active=True).first()
         client.post("/experience/answer/", {"answer_id": option.id}, **hx)
     client.post("/experience/complete/", **hx)
     assert "backgrounds/result.webp" in client.get("/").content.decode()
+
+
+def test_each_question_has_its_own_background(seeded, client, hx):
+    client.post("/experience/start/", **hx)
+    response = client.post("/experience/profile/", PROFILE, **hx)
+    assert "backgrounds/q1.webp" in response.content.decode()
+
+    for question in seeded.questions.order_by("order"):
+        option = question.options.filter(is_active=True).first()
+        response = client.post("/experience/answer/", {"answer_id": option.id}, **hx)
+        next_order = question.order + 1
+        if next_order <= 6:
+            expected = f"backgrounds/q{next_order}.webp"
+            assert expected in response.content.decode(), f"expected {expected} after Q{question.order}"
+            assert "hx-swap-oob" in response.content.decode()
+        else:
+            assert "backgrounds/analyzing.webp" in response.content.decode()
+
+    response = client.post("/experience/complete/", **hx)
+    assert "backgrounds/result.webp" in response.content.decode()
+
+
+def test_reset_restores_kv_background(seeded, client, hx):
+    client.post("/experience/start/", **hx)
+    client.post("/experience/profile/", PROFILE, **hx)
+    for question in seeded.questions.order_by("order"):
+        option = question.options.filter(is_active=True).first()
+        client.post("/experience/answer/", {"answer_id": option.id}, **hx)
+    client.post("/experience/complete/", **hx)
+    response = client.post("/experience/reset/", **hx)
+    assert "branding/kv/kv-placeholder.webp" in response.content.decode()
+
+
+def test_refresh_shows_current_question_background(seeded, client, hx):
+    client.post("/experience/start/", **hx)
+    client.post("/experience/profile/", PROFILE, **hx)
+    for order in (1, 2):
+        question = seeded.questions.get(order=order)
+        option = question.options.filter(is_active=True).first()
+        client.post("/experience/answer/", {"answer_id": option.id}, **hx)
+    content = client.get("/").content.decode()
+    assert "backgrounds/q3.webp" in content
 
 
 def test_compact_header_has_no_background_band(seeded, client, hx):

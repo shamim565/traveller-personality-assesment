@@ -1,14 +1,16 @@
 {% load static %}
 {% firstof image "branding/kv/kv-placeholder.webp" as bg %}
-<img src="{% static bg %}" alt="" aria-hidden="true"
-     class="absolute inset-0 h-full w-full object-cover {% if animated %}kv-zoom{% endif %}">
-{% if overlay == "light" %}
-<div class="absolute inset-0 bg-gradient-to-b from-brand-night/40 via-brand-night/70 to-brand-night"></div>
-{% elif overlay == "medium" %}
-<div class="absolute inset-0 bg-brand-night/50"></div>
-<div class="absolute inset-0 bg-gradient-to-b from-brand-night/55 via-brand-night/60 to-brand-night/85"></div>
-{% else %}
-<div class="absolute inset-0 bg-brand-night/60"></div>
-<div class="absolute inset-0 bg-gradient-to-b from-brand-night/70 via-brand-night/65 to-brand-night/90"></div>
-{% endif %}
-<div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent"></div>
+<div id="page-bg" class="absolute inset-0" {% if oob %}hx-swap-oob="outerHTML:#page-bg"{% endif %}>
+    <img src="{% static bg %}" alt="" aria-hidden="true"
+         class="absolute inset-0 h-full w-full object-cover {% if animated %}kv-zoom{% endif %}">
+    {% if overlay == "light" %}
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-night/40 via-brand-night/70 to-brand-night"></div>
+    {% elif overlay == "medium" %}
+    <div class="absolute inset-0 bg-brand-night/50"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-night/55 via-brand-night/60 to-brand-night/85"></div>
+    {% else %}
+    <div class="absolute inset-0 bg-brand-night/60"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-brand-night/70 via-brand-night/65 to-brand-night/90"></div>
+    {% endif %}
+    <div class="pointer-events-none absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/55 to-transparent"></div>
+</div>

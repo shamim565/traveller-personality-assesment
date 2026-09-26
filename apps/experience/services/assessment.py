@@ -70,15 +70,30 @@ def current_question(request):
     return None
 
 
+QUESTION_BACKGROUNDS = {
+    1: ("backgrounds/q1.webp", "dark"),
+    2: ("backgrounds/q2.webp", "medium"),
+    3: ("backgrounds/q3.webp", "medium"),
+    4: ("backgrounds/q4.webp", "dark"),
+    5: ("backgrounds/q5.webp", "medium"),
+    6: ("backgrounds/q6.webp", "dark"),
+}
+
+
 def question_context(question, request):
     options = list(question.options.filter(is_active=True).order_by("order"))
     answered = len(sessions.get_answers(request))
     total = len(sessions.get_question_order(request))
+    background, background_overlay = QUESTION_BACKGROUNDS.get(
+        question.order, ("branding/kv/kv-placeholder.webp", "medium")
+    )
     return {
         "question": question,
         "options": options,
         "current": answered + 1,
         "total": total,
+        "background": background,
+        "background_overlay": background_overlay,
     }
 
 

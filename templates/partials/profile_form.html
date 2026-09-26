@@ -1,3 +1,6 @@
+<div hidden>
+    {% include "partials/page_background.html" with image="backgrounds/profile.webp" overlay="dark" oob=True %}
+</div>
 <form
     hx-post="{% url 'experience:profile' %}"
     hx-target="#experience"

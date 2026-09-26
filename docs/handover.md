@@ -52,16 +52,22 @@ Print and follow `docs/exhibition-checklist.md`. Highlights:
 
 ## 4. Replacing Page Backgrounds / Branding Assets
 
-- **Per-page background images:** each kiosk page includes
-  `templates/partials/page_background.html` from its wrapper
-  (`templates/kiosk/<page>.html`, line 4) with an `image="backgrounds/…"` path
-  and an overlay strength (`overlay="light|medium|dark"`) — change one line per
-  page. Current pages use `backgrounds/{idle,profile,quiz,analyzing,result,error}.webp`;
-  `spare-1…4.webp` are unconverted extras. To swap: drop an optimized WebP
-  (1920×1080, ≤~300KB) into `static/backgrounds/`, edit the path, rebuild the
-  image, then `docker compose exec web python manage.py collectstatic --noinput`.
-- **Logos/KV:** `static/branding/logos/`, `static/branding/world-tourism-day/`,
-  `static/branding/kv/` — drop in final files, then collectstatic.
+- **Idle (attract) screen** uses the campaign KV: change
+  `templates/kiosk/idle.html` (line 4, `image="branding/kv/kv-placeholder.webp"`).
+- **Quiz questions** each have their own photo, switched automatically with
+  every answer via an out-of-band background swap. The mapping lives in
+  `apps/experience/services/assessment.py` (`QUESTION_BACKGROUNDS`) and the
+  files are `static/backgrounds/q1.webp` … `q6.webp`.
+- **Other screens:** `templates/kiosk/{profile,analyzing,result,error}.html`
+  point at `backgrounds/{profile,analyzing,result,error}.webp`.
+- Overlay strength is per background (`overlay="light|medium|dark"`) and was
+  auto-chosen from each photo's brightness for text readability.
+- To swap any image: drop an optimized WebP (1920×1080, ≤~300KB) into
+  `static/backgrounds/`, edit the matching `image="…"` path (and overlay if
+  needed), then rebuild + collectstatic:
+  `docker compose up -d --build && docker compose exec web python manage.py collectstatic --noinput`
+- **Logos:** `static/branding/logos/` (govt + tourism board) and
+  `static/branding/world-tourism-day/` — drop in final files, then collectstatic.
 - Avatars: add rows via **Admin → PersonaAvatar** (persona + gender +
   age group + static path + is_default) with files in
   `static/avatars/<persona_slug>/`; the fallback chain (exact → gender

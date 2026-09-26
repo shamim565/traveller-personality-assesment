@@ -1,4 +1,7 @@
 {% include "partials/progress.html" %}
+<div hidden>
+    {% include "partials/page_background.html" with image=background overlay=background_overlay oob=True %}
+</div>
 <div x-data="kioskReveal" x-show="show" x-transition.opacity.duration.300ms
      data-guard="1"
      class="flex flex-1 flex-col items-center justify-center gap-10 p-10 text-center">
