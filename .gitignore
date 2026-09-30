@@ -17,6 +17,7 @@ media/
 .env
 .env.*
 !.env.example
+.htpasswd
 
 # Node / frontend build
 node_modules/
