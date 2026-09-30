@@ -42,10 +42,6 @@ git clone https://github.com/shamim565/traveller-personality-assesment.git .
 nano .env
 chmod 600 .env
 
-# Basic-auth for /admin/ + /dashboard/ — create BEFORE first `up`
-docker run --rm httpd:alpine htpasswd -nbB <user> '<password>' > .htpasswd
-chmod 640 .htpasswd
-
 docker compose -f docker-compose.vps.yml up -d --build
 docker compose -f docker-compose.vps.yml logs --tail=50 web   # migrate + collectstatic
 
@@ -72,9 +68,8 @@ KIOSK_IDENTIFIER=KIOSK-01
 `http://localhost:8000/health/`. `POSTGRES_PASSWORD` must be correct before the
 first start — changing it later requires recreating the `pgdata` volume.
 
-Note: if `.htpasswd` does not exist when the stack starts, Docker creates a
-directory in its place and nginx fails to start; recreate the file and
-`docker compose -f docker-compose.vps.yml restart nginx`.
+`/admin/` and `/dashboard/` require only the Django staff login. If you want an
+extra browser-level gate, see "Optional: basic auth" below.
 
 ## 3. Verify the stack internally
 
@@ -132,9 +127,9 @@ curl -fsS https://persona.ruletheday.app/health/
 ```
 
 - Browser: idle → quiz → result → scan the QR with a phone (works over mobile
-  data) → the result PNG downloads.
-- `https://persona.ruletheday.app/admin/` and `/dashboard/` ask for basic auth,
-  then the Django staff login.
+  data) → the result PNG downloads, showing the visitor's name and persona.
+- `https://persona.ruletheday.app/admin/` and `/dashboard/` go straight to the
+  Django staff login.
 - Re-check `ruletheday.app` / `api.ruletheday.app` still respond.
 
 ## 7. Fix the pre-existing api renewal (standalone → webroot)
@@ -169,10 +164,32 @@ git pull
 docker compose -f docker-compose.vps.yml up -d --build
 ```
 
-`entrypoint.sh` runs migrations and collectstatic on start. `.env` and
-`.htpasswd` are untracked and stay untouched. If
-`deploy/vps/ruletheday-snippet.conf` changes in the repo, re-append the block
-manually and reload the ruletheday nginx.
+`entrypoint.sh` runs migrations and collectstatic on start. `.env` stays
+untouched. If `deploy/vps/ruletheday-snippet.conf` changes in the repo, re-append
+the block manually and reload the ruletheday nginx.
+
+## 10. Optional: basic auth for /admin/ + /dashboard/
+
+Off by default. To add the browser password prompt on top of the Django login:
+
+```bash
+cd /opt/travel-persona
+docker run --rm httpd:alpine htpasswd -nbB <user> '<password>' > .htpasswd
+chmod 640 .htpasswd
+```
+
+1. Add the mount back to the `nginx` service in `docker-compose.vps.yml`:
+   `- ./.htpasswd:/etc/nginx/.htpasswd:ro`
+2. Uncomment the two `auth_basic*` lines in both `/admin/` and `/dashboard/`
+   blocks of `deploy/vps/persona-nginx.conf`.
+3. Apply:
+   ```bash
+   docker compose -f docker-compose.vps.yml up -d nginx
+   ```
+   Recreate `.htpasswd` before the first `up` — a missing bind-mount source is
+   created as a directory by Docker and nginx fails to start.
+
+To disable again: comment the lines, remove the mount, `up -d nginx`.
 
 ## Troubleshooting
 
@@ -184,5 +201,5 @@ manually and reload the ruletheday nginx.
 | CSRF failure | outer proxy not sending `X-Forwarded-Proto`; our nginx `map` must forward it |
 | `nginx: [emerg]` on reload | snippet references a missing cert file — issue the cert first (step 4) |
 | certbot challenge fails | DNS not propagated, or Cloudflare proxy is orange — set DNS only |
-| nginx won't start after deploy | `.htpasswd` was missing and Docker created a directory |
+| basic-auth 500s (if enabled) | `.htpasswd` missing or is a directory — recreate the file (step 10) |
 | QR doesn't open | phone must reach the public domain; 4G works, private IPs don't |

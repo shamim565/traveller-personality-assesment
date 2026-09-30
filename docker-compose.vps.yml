@@ -43,7 +43,6 @@ services:
     volumes:
       - ./deploy/vps/persona-nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - static_files:/app/staticfiles:ro
-      - ./.htpasswd:/etc/nginx/.htpasswd:ro
     depends_on:
       - web
     networks:
