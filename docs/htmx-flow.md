@@ -64,7 +64,7 @@ POST /experience/complete/
 ↓ single transaction: update AssessmentSession (age_group, gender, personas,
   scores, completed_at, duration, status=completed)
   + insert AssessmentAnswer rows + AssessmentPersonaScore rows
-↓ clear experience.name from session (privacy)
+↓ copy experience.name onto the completed assessment (privacy.md §2)
 ↓ return partials/result.html
 ↓ idempotency: if already completed → return persisted result, no re-write
 ```

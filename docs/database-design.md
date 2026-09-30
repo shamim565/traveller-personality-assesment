@@ -103,6 +103,7 @@ global default asset constant `AVATAR_GLOBAL_DEFAULT`.
 |---|---|---|
 | session_uuid | UUIDField unique, default=uuid4 | stable anonymous id |
 | questionnaire_version | FK PROTECT | preserves analytics integrity |
+| visitor_name | CharField(80), blank default "" | written only at completion; used to render the visitor's own result/download (privacy.md §2) |
 | age_group | FK SET_NULL null | exact age **not** stored (privacy decision, privacy.md §4) |
 | gender | CharField(20) choices null | |
 | primary_persona | FK SET_NULL null | |
@@ -162,7 +163,7 @@ stakeholders need per-step event data; MVP satisfies all §50 metrics without it
 
 ## 5. Privacy Implications
 
-- Visitor name: never a column (session only).
+- Visitor name: stored only on completed assessments (`AssessmentSession.visitor_name`), written at completion to render that visitor's result/download.
 - Exact age: not stored; age group FK only.
 - Gender: stored as enumerated slug (needed for avatar + approved analytics).
 - Every row is anonymous and joinable only via random UUID.

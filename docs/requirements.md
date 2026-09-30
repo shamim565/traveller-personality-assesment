@@ -45,13 +45,13 @@ This is an **exhibition activation**, not a conventional web application. Reliab
 - Deterministic fallback chain: exact → persona+gender default → persona neutral → global default. Never a broken image.
 
 ### FR-7 — Session lifecycle
-- Django-session-based visitor state; name never persisted to PostgreSQL by default.
+- Django-session-based visitor state; the name is stored on the completed assessment only (for the visitor's own result/download) and never used for analytics.
 - Manual "Start Again" plus configurable inactivity reset (45 s mid-quiz; 30–45 s on result).
 - Next visitor must never see previous visitor data.
 
 ### FR-8 — Analytics persistence
 - Persist one completed assessment per visitor: session UUID, age group, gender, questionnaire version, answers, persona scores, primary/secondary persona, timestamps, duration, kiosk identifier.
-- Store age **group** (not exact age) by default. Never store the name.
+- Store age **group** (not exact age) by default. The name is written only at completion, solely to render that visitor's result and QR download.
 
 ### FR-9 — Analytics dashboard
 - Staff-authenticated, `/dashboard/`, not reachable from the kiosk UI.
@@ -75,7 +75,7 @@ This is an **exhibition activation**, not a conventional web application. Reliab
 | Latency | Initial load < 3 s on exhibition hardware; question transition near-instant; HTMX request ideally < 300 ms on LAN; scoring < 100 ms |
 | Reliability | Survives browser refresh, rapid double-taps, long sessions, app restart, DB hiccups; friendly recovery screen instead of error pages |
 | Availability | Core quiz has zero internet dependency (no external AI/APIs) |
-| Privacy | Data minimization; name in session only; no silent PII persistence |
+| Privacy | Data minimization; name in session during the flow and written to the completed assessment only for its result/download; no analytics or log use |
 | Security | CSRF, server-side validation, HTTPS, secure cookies, DEBUG=False, restrictive ALLOWED_HOSTS, authenticated dashboard, ORM-only queries |
 | Accessibility | Semantic HTML, large text, high contrast, visible focus, 44 px+ touch targets, not color-only |
 | Localization | Bangla-first UI; architecture supports `_bn`/`_en` fields and English later |
@@ -84,7 +84,7 @@ This is an **exhibition activation**, not a conventional web application. Reliab
 
 ## 4. MVP Scope
 
-Idle screen → profile (name/age/gender) → 6-question Bangla quiz → analysis transition → persona reveal + avatar → result → restart/timeout reset. The result screen shows a QR code; scanning it opens a downloadable PNG of the result card on the visitor's phone (no visitor name included). Backing: Django Admin content management, seeded questionnaire, deterministic scoring engine, analytics persistence + dashboard, Docker production config, full documentation.
+Idle screen → profile (name/age/gender) → 6-question Bangla quiz → analysis transition → persona reveal + avatar → result → restart/timeout reset. The result screen shows a QR code; scanning it opens a downloadable PNG of the result card (including the visitor's name) on the visitor's phone. Backing: Django Admin content management, seeded questionnaire, deterministic scoring engine, analytics persistence + dashboard, Docker production config, full documentation.
 
 ## 5. Future Scope (NOT in MVP)
 

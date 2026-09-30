@@ -15,8 +15,9 @@ minimization, retention, and dashboard protection.
    HttpOnly session/CSRF cookies, secrets via environment only.
 4. Dashboard/exports: `staff_member_required`; individual staff accounts, no
    shared credentials.
-5. Data minimization is the default: name lives in session only; exact age not
-   stored; enumerated gender; anonymous UUIDs.
+5. Data minimization is the default: the name is kept in session during the flow
+   and written to the completed assessment only (for its result/download); exact
+   age not stored; enumerated gender; anonymous UUIDs.
 6. Logs contain no visitor names or personal data; errors include anonymous
    session UUID for correlation.
 7. Retention documented (default 90 days) with a purge management command.

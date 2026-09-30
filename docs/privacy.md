@@ -8,7 +8,7 @@ wherever possible, persist only what analytics justify.
 
 | Field | Where | Stored in DB? | Purpose | Retention |
 |---|---|---|---|---|
-| Visitor name | Django session only | **No** | Result personalization | Deleted on reset/timeout/complete |
+| Visitor name | session, then completed assessment | Yes (completed only) | Result personalization (screen + downloaded picture) | Retention window |
 | Age (exact) | session during flow | **No** (age group only) | Avatar group + demographics | Session-scoped |
 | Age group | DB (FK) | Yes | Avatar + aggregate analytics | Retention window |
 | Gender | session, then DB | Yes (enumerated) | Avatar + approved aggregate analytics | Retention window |
@@ -20,17 +20,21 @@ wherever possible, persist only what analytics justify.
 
 ## 2. Name Handling
 
-- Name lives **only** in the Django session, from profile submission until the
-  experience resets (manual restart, inactivity timeout, or a new visitor
-  starting). Nothing persists it to PostgreSQL.
-- Result screen may show the name because it is rendered in the same session
-  context; nothing persists it.
-- The downloadable result image (QR code on the result screen) is rendered from
-  the persisted assessment alone and deliberately contains **no visitor name**;
-  the phone scanning the QR has no session and the URL carries no PII.
-- If stakeholders later require name retention (e.g., social-wall), it requires:
-  explicit consent, a documented business purpose, and a retention policy.
-  The model intentionally has no name column.
+- Name lives in the Django session during the flow.
+- On completion it is copied to the assessment row (`AssessmentSession.visitor_name`)
+  for one purpose: rendering the visitor's own result, including the picture the
+  phone downloads from the result QR. Starting a new survey never touches
+  previous rows, so each visitor's download carries exactly the name their own
+  result screen showed.
+- Abandoned or timed-out sessions are never given a name (the field is written
+  only at completion).
+- The name is **not** written to application logs, not included in analytics
+  aggregates, and not part of CSV exports. Django admin exposes it read-only to
+  staff on the session detail page.
+- It is retained with the assessment for the documented retention window; deleting
+  assessment data deletes it.
+- Any additional use of the name (e.g., social-wall) still requires explicit
+  consent, a documented business purpose, and a retention policy.
 
 ## 3. Age Handling
 

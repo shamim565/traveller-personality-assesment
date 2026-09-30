@@ -94,7 +94,7 @@ key prefix:
 
 ```
 experience.started_at       # ISO timestamp
-experience.name             # ephemeral (cleared on reset; never persisted)
+experience.name             # session during the flow; copied to the assessment at completion (privacy.md §2)
 experience.age              # int
 experience.gender           # slug
 experience.qv_id            # active questionnaire version id
@@ -124,7 +124,8 @@ Question partial, or Analyzing partial after the last question.
 
 **Complete:** POST `/experience/complete/` (auto-fired from Analyzing) → service
 validates all answers present → runs scoring → persists assessment +
-answers + scores in one transaction → clears `experience.name` → Result partial.
+answers + scores in one transaction (visitor name written to the assessment) →
+Result partial.
 Idempotent: if the assessment UUID is already `completed`, the persisted result
 is returned without a second write.
 
@@ -135,9 +136,9 @@ is returned without a second write.
 looks up the completed assessment by UUID → renders the result card as a PNG
 (Pillow, `apps/experience/services/result_image.py`) → serves it with
 `Content-Disposition: attachment`. The kiosk result partial embeds a QR code of
-this URL (`qr_image`); a phone on the same LAN scans it and downloads the
-picture. The visitor name is session-only, so the image contains none
-(docs/privacy.md).
+this URL (`qr_image`); the visitor's phone scans it and downloads the picture,
+including the name the visitor entered (stored on the completed assessment at
+completion; docs/privacy.md §2).
 
 See htmx-flow.md for per-request detail.
 

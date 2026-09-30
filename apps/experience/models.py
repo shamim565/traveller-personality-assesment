@@ -207,6 +207,7 @@ class AssessmentSession(models.Model):
     questionnaire_version = models.ForeignKey(
         QuestionnaireVersion, on_delete=models.PROTECT, related_name="assessments"
     )
+    visitor_name = models.CharField(max_length=80, blank=True, default="")
     age_group = models.ForeignKey(
         AgeGroup, on_delete=models.SET_NULL, null=True, blank=True, related_name="+"
     )

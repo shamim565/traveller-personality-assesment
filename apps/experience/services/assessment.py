@@ -164,6 +164,7 @@ def complete_experience(request):
         scoring_result = scoring.calculate_travel_persona(options)
 
         persona_by_slug = {p.slug: p for p in Persona.objects.filter(is_active=True)}
+        assessment.visitor_name = sessions.get_name(request) or ""
         assessment.age_group = AgeGroup.resolve(sessions.get_age(request))
         assessment.gender = sessions.get_gender(request)
         assessment.primary_persona = persona_by_slug[scoring_result.primary]
@@ -180,6 +181,7 @@ def complete_experience(request):
         assessment.status = AssessmentStatus.COMPLETED
         assessment.save(
             update_fields=[
+                "visitor_name",
                 "age_group",
                 "gender",
                 "primary_persona",

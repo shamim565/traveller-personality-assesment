@@ -2,6 +2,7 @@ import pytest
 from django.urls import reverse
 
 from apps.experience.models import AssessmentSession, AssessmentStatus
+from apps.experience.services import result_image
 
 PROFILE = {"name": "Sazid", "age": 25, "gender": "male"}
 PNG_SIGNATURE = b"\x89PNG\r\n\x1a\n"
@@ -52,3 +53,14 @@ def test_result_image_unknown_uuid_is_404(seeded, client):
         args=["00000000-0000-0000-0000-000000000000"],
     )
     assert client.get(url).status_code == 404
+
+
+def test_result_image_renders_visitor_name(seeded, client, hx):
+    assessment = complete_flow(client, seeded, hx)
+    assert assessment.visitor_name == "Sazid"
+    named = result_image.render_result_png(assessment)
+    assessment.visitor_name = ""
+    blank = result_image.render_result_png(assessment)
+    assert named.startswith(PNG_SIGNATURE)
+    assert blank.startswith(PNG_SIGNATURE)
+    assert named != blank

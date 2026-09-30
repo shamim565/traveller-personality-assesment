@@ -33,9 +33,10 @@ def answer_option_id(version, q_order, o_order):
     return question.options.get(order=o_order).id
 
 
-def run_full_flow(client, version, pairs, hx):
+def run_full_flow(client, version, pairs, hx, name=PROFILE["name"]):
     assert start(client, **hx).status_code == 200
-    assert client.post("/experience/profile/", PROFILE, **hx).status_code == 200
+    profile = {**PROFILE, "name": name}
+    assert client.post("/experience/profile/", profile, **hx).status_code == 200
     for q_order, o_order in pairs:
         response = answer(client, answer_option_id(version, q_order, o_order), **hx)
         assert response.status_code == 200
@@ -137,6 +138,7 @@ def test_complete_persists_assessment(seeded, client, hx):
     assert "BEACH LOVER" in response.content.decode()
     assessment = AssessmentSession.objects.get()
     assert assessment.status == AssessmentStatus.COMPLETED
+    assert assessment.visitor_name == "Sazid"
     assert assessment.primary_persona.slug == "beach_lover"
     assert assessment.secondary_persona.slug == "nature_explorer"
     assert assessment.gender == "male"
@@ -152,6 +154,18 @@ def test_heritage_flow_primary(seeded, client, hx):
     response = run_full_flow(client, seeded, ALL_HERITAGE, hx)
     assert "HERITAGE HUNTER" in response.content.decode()
     assert AssessmentSession.objects.get().primary_persona.slug == "heritage_hunter"
+
+
+def test_each_survey_keeps_its_own_visitor_name(seeded, client, hx):
+    run_full_flow(client, seeded, ALL_BEACH, hx, name="Sazid")
+    client.post("/experience/reset/", **hx)
+    run_full_flow(client, seeded, ALL_BEACH, hx, name="Rahim")
+    names = list(
+        AssessmentSession.objects.filter(status=AssessmentStatus.COMPLETED)
+        .order_by("started_at")
+        .values_list("visitor_name", flat=True)
+    )
+    assert names == ["Sazid", "Rahim"]
 
 
 def test_complete_is_idempotent(seeded, client, hx):
@@ -173,13 +187,20 @@ def test_complete_with_missing_answers_fails_gracefully(seeded, client, hx):
     assert assessment.status == AssessmentStatus.STARTED
 
 
-def test_name_never_persisted_to_db(seeded, client, hx):
+def test_visitor_name_only_set_at_completion(seeded, client, hx):
+    client.post("/experience/start/", **hx)
+    client.post("/experience/profile/", PROFILE, **hx)
+    assessment = AssessmentSession.objects.get()
+    assessment.refresh_from_db()
+    assert assessment.visitor_name == ""
+    client.post("/experience/reset/", **hx)
+    assessment.refresh_from_db()
+    assert assessment.status == AssessmentStatus.ABANDONED
+    assert assessment.visitor_name == ""
     run_full_flow(client, seeded, ALL_BEACH, hx)
-    field_names = [field.name for field in AssessmentSession._meta.fields]
-    assert "name" not in field_names
-    assert "Sazid" not in str(
-        list(AssessmentSession.objects.values())
-    )
+    assert AssessmentSession.objects.get(
+        status=AssessmentStatus.COMPLETED
+    ).visitor_name == "Sazid"
 
 
 # ---------------------------------------------------------------------------

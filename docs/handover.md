@@ -79,8 +79,10 @@ Print and follow `docs/exhibition-checklist.md`. Highlights:
   instant, offline, reproducible. "AI" is branding only
 - **Question 5 (companion) carries zero persona weight** — analytics-only
   trait (solo/couple/family/friends/destination_first)
-- **Privacy:** visitor name lives only in the Django session (cleared on
-  reset/timeout, never in PostgreSQL); exact age not stored (age group only)
+- **Privacy:** visitor name is kept in the Django session during the flow and
+  written to the completed assessment only (to render that visitor's result and
+  QR download; never used for analytics or logs); exact age not stored (age
+  group only)
 - **Reliability:** idempotent answers, single-transaction completion,
   refresh-safe resume, inactivity guard, DB-enforced integrity
 - **Deployment:** local LAN server (Option B); internet optional

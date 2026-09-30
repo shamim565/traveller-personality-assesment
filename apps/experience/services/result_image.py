@@ -27,6 +27,10 @@ logger = logging.getLogger(__name__)
 WIDTH, HEIGHT = 1080, 1350
 PADDING = 90
 AVATAR_SIZE = 380
+NAME_Y = 172
+YOU_ARE_A_Y = 258
+PERSONA_Y = 350
+AVATAR_TOP = 420
 
 NIGHT = (15, 23, 42)
 SAND = (245, 158, 11)
@@ -60,17 +64,31 @@ def render_result_png(assessment):
         persona, gender=assessment.gender, age_group=assessment.age_group
     )
     keywords = [k.strip() for k in persona.keywords_bn.split("•") if k.strip()]
+    name = assessment.visitor_name
 
     image = _canvas()
     draw = ImageDraw.Draw(image)
 
     _draw_tracked(draw, WIDTH // 2, 116, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
-    _draw_tracked(draw, WIDTH // 2, 214, "YOU ARE A", _font(44), WHITE, 14)
+    if name:
+        name_font = _font(56, bold=True)
+        draw.text(
+            (WIDTH // 2, NAME_Y),
+            _ellipsize(draw, f"{name},", name_font, WIDTH - 2 * PADDING),
+            font=name_font,
+            fill=WHITE,
+            anchor="mm",
+        )
+    _draw_tracked(draw, WIDTH // 2, YOU_ARE_A_Y, "YOU ARE A", _font(44), WHITE, 14)
     draw.text(
-        (WIDTH // 2, 306), persona.name.upper(), font=_font(104, bold=True), fill=SAND, anchor="mm"
+        (WIDTH // 2, PERSONA_Y),
+        persona.name.upper(),
+        font=_font(104, bold=True),
+        fill=SAND,
+        anchor="mm",
     )
 
-    y = _draw_avatar(image, avatar, persona.slug, top=376)
+    y = _draw_avatar(image, avatar, persona.slug, top=AVATAR_TOP)
     y = _draw_wrapped(draw, y, persona.short_description_bn, _font(46), WHITE, max_lines=4)
     _draw_keywords(draw, y + 56, keywords)
     _draw_footer(draw, assessment)
@@ -78,6 +96,14 @@ def render_result_png(assessment):
     buffer = io.BytesIO()
     image.save(buffer, format="PNG")
     return buffer.getvalue()
+
+
+def _ellipsize(draw, text, font, max_width):
+    if draw.textlength(text, font=font) <= max_width:
+        return text
+    while text and draw.textlength(f"{text}…", font=font) > max_width:
+        text = text[:-1]
+    return f"{text}…"
 
 
 @lru_cache(maxsize=1)

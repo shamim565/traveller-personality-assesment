@@ -14,7 +14,7 @@ kiosk flows, and edge-case coverage.
 3. HTMX tests use the Django test client with `HTTP_HX-Request` and assert
    partial templates + context, not full pages.
 4. Session lifecycle tests must cover: start, profile, answers, replace-answer,
-   complete-idempotency, reset-clears-everything, name-never-persisted.
+   complete-idempotency, reset-clears-everything, name-written-only-at-completion.
 5. E2E (Playwright) covers the kiosk journeys incl. abandon, timeout, refresh,
    double-tap, missing avatar, invalid session, double completion.
 6. Reliability suite (soak, DB interruption, restart) runs before event freeze.

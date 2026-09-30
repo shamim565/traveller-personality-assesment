@@ -58,7 +58,7 @@ Idle/Attract ──▶ Profile ──▶ Q1 ──▶ Q2 ──▶ Q3 ──▶ 
    A QR code between the result card and the button opens
    `http://<kiosk-host>/experience/result/<uuid>/image/` on the visitor's phone,
    which downloads the result card as a PNG (built by Pillow from the completed
-   assessment; no visitor name).
+   assessment, including the visitor's name).
 3. **Manual "Start Again"** available on result and error screens.
 4. **Reset guarantees:** clears name, age, gender, answers, result state from the
    session; marks any unfinished assessment record `abandoned`; returns Idle.
