@@ -35,7 +35,7 @@ conflict with the ruletheday nginx for :80). Use `docker-compose.vps.yml`.
 ## 2. First deploy
 
 ```bash
-mkdir -p /srv/travel-persona && cd /srv/travel-persona
+mkdir -p /opt/travel-persona && cd /opt/travel-persona
 git clone https://github.com/shamim565/traveller-personality-assesment.git .
 
 # .env (never committed)
@@ -152,11 +152,11 @@ docker exec ruletheday-backend-certbot-1 certbot renew --dry-run
 ## 8. Backups (cron)
 
 ```bash
-mkdir -p /srv/travel-persona-backups
+mkdir -p /opt/travel-persona-backups
 crontab -e
 
-0 3 * * * cd /srv/travel-persona && docker compose -f docker-compose.vps.yml exec -T db pg_dump -U travel_persona travel_persona | gzip > /srv/travel-persona-backups/db-$(date +\%F).sql.gz
-15 3 * * * find /srv/travel-persona-backups -name 'db-*.sql.gz' -mtime +14 -delete
+0 3 * * * cd /opt/travel-persona && docker compose -f docker-compose.vps.yml exec -T db pg_dump -U travel_persona travel_persona | gzip > /opt/travel-persona-backups/db-$(date +\%F).sql.gz
+15 3 * * * find /opt/travel-persona-backups -name 'db-*.sql.gz' -mtime +14 -delete
 ```
 
 Restore: `gunzip -c db-<date>.sql.gz | docker compose -f docker-compose.vps.yml exec -T db psql -U travel_persona travel_persona`
@@ -164,7 +164,7 @@ Restore: `gunzip -c db-<date>.sql.gz | docker compose -f docker-compose.vps.yml 
 ## 9. Updates
 
 ```bash
-cd /srv/travel-persona
+cd /opt/travel-persona
 git pull
 docker compose -f docker-compose.vps.yml up -d --build
 ```
