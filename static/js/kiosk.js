@@ -40,27 +40,6 @@
       },
     }));
 
-    Alpine.data("kioskCountdown", (seconds, resetUrl) => ({
-      remaining: seconds,
-      init() {
-        this.intervalId = setInterval(() => {
-          this.remaining -= 1;
-          if (this.remaining <= 0) {
-            clearInterval(this.intervalId);
-            if (typeof htmx !== "undefined") {
-              htmx.ajax("POST", resetUrl, {
-                target: "#experience",
-                swap: "innerHTML",
-              });
-            }
-          }
-        }, 1000);
-      },
-      destroy() {
-        clearInterval(this.intervalId);
-      },
-    }));
-
     Alpine.data("kioskReveal", () => ({
       show: false,
       init() {

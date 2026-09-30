@@ -18,15 +18,7 @@ from apps.experience.models import (
     Question,
 )
 
-TIE_BREAK_PRIORITY = [
-    "heritage_hunter",
-    "nature_explorer",
-    "culture_connector",
-    "adventure_seeker",
-    "beach_lover",
-    "urban_explorer",
-]
-
+UNSET_TIE_BREAK_ORDER = 1 << 16
 CORE_QUESTION_ORDERS = frozenset({1, 2, 3, 4})
 STRONG_WEIGHT_THRESHOLD = 4
 
@@ -134,18 +126,26 @@ def calculate_travel_persona(answers):
             if question.order in CORE_QUESTION_ORDERS:
                 core[slug] += weight
 
-    priority_index = {slug: index for index, slug in enumerate(TIE_BREAK_PRIORITY)}
-    fallback_index = len(TIE_BREAK_PRIORITY)
+    ordered_personas = sorted(
+        active_personas,
+        key=lambda persona: (
+            persona.tie_break_order or UNSET_TIE_BREAK_ORDER,
+            persona.slug,
+        ),
+    )
+    priority_index = {
+        persona.slug: index for index, persona in enumerate(ordered_personas)
+    }
 
     def sort_key(slug):
         return (
             -raw[slug],
             -strong[slug],
             -core[slug],
-            priority_index.get(slug, fallback_index),
+            priority_index[slug],
         )
 
-    ranked = sorted(active_slugs, key=sort_key)
+    ranked = sorted(priority_index, key=sort_key)
 
     primary = ranked[0]
     secondary = ranked[1] if len(ranked) > 1 and raw[ranked[1]] > 0 else None

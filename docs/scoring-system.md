@@ -13,7 +13,8 @@ Question 5 is excluded from persona scoring entirely (see §6).
 
 Weights are integers `0..5`. `0` = no association. `4` = strong primary association.
 `1–3` = secondary association. Weights live in the DB so admins can recalibrate
-without code changes. The seeded matrix below is the v1 calibration.
+without code changes. The seeded matrix below is the v1 calibration, revised to
+v1.1 for the nature recalibration noted per row.
 
 ## 2. Complete Scoring Matrix (v1)
 
@@ -41,7 +42,7 @@ without code changes. The seeded matrix below is the v1 calibration.
 
 | # | Answer | Heritage | Beach | Adventure | Nature | Urban | Culture | Rationale |
 |---|---|---|---|---|---|---|---|---|
-| 1 | আরাম করব, ছবি তুলব, ভিউ উপভোগ করব | 0 | **3** | 0 | 2 | 0 | 0 | Relax+scenery: Beach primary, Nature secondary (photo/view) |
+| 1 | আরাম করব, ছবি তুলব, ভিউ উপভোগ করব | 0 | **3** | 0 | 3 | 0 | 0 | Relax+scenery (v1.1): Beach/Nature balanced; "view/photo" is scenery |
 | 2 | পুরোনো স্থাপনা আর ঐতিহাসিক জায়গা ঘুরব | **4** | 0 | 0 | 0 | 0 | 1 | Heritage primary |
 | 3 | ট্রেকিং, ক্যাম্পিং বা অ্যাডভেঞ্চার কিছু করব | 0 | 0 | **4** | 2 | 0 | 0 | Spec example: Adventure +4, Nature +2 |
 | 4 | লোকাল খাবার খাব আর মানুষের সঙ্গে মিশব | 1 | 0 | 0 | 0 | 0 | **4** | Culture primary; heritage secondary |
@@ -51,7 +52,7 @@ without code changes. The seeded matrix below is the v1 calibration.
 
 | # | Answer | Heritage | Beach | Adventure | Nature | Urban | Culture | Rationale |
 |---|---|---|---|---|---|---|---|---|
-| 1 | একদম শান্ত আর আরামদায়ক | 0 | **3** | 0 | 1 | 0 | 0 | Calm: Beach primary, light Nature |
+| 1 | একদম শান্ত আর আরামদায়ক | 0 | **3** | 0 | 2 | 0 | 0 | Calm: Beach primary; calm is not beach-exclusive (v1.1) |
 | 2 | ইতিহাস আর গল্পে ভরা | **4** | 0 | 0 | 0 | 0 | 1 | Heritage primary |
 | 3 | একটু ঝুঁকি, একটু রোমাঞ্চ | 0 | 0 | **4** | 1 | 0 | 0 | Thrill = Adventure primary |
 | 4 | লোকাল কালচার আর নতুন অভিজ্ঞতায় ভরা | 1 | 0 | 0 | 0 | 0 | **4** | Culture primary |
@@ -61,7 +62,7 @@ without code changes. The seeded matrix below is the v1 calibration.
 
 | # | Answer | Heritage | Beach | Adventure | Nature | Urban | Culture | Rationale |
 |---|---|---|---|---|---|---|---|---|
-| 1 | সমুদ্র বা নদীর ধারে বসে সূর্যাস্ত দেখব | 0 | **4** | 0 | 1 | 0 | 0 | Water+sunset: Beach primary, light Nature |
+| 1 | সমুদ্র বা নদীর ধারে বসে সূর্যাস্ত দেখব | 0 | **4** | 0 | 2 | 0 | 0 | Water+sunset: Beach primary; river/nature scenery secondary (v1.1) |
 | 2 | কোনো পুরোনো প্রাসাদ, মন্দির বা ঐতিহাসিক জায়গা ঘুরব | **4** | 0 | 0 | 0 | 0 | 1 | Heritage primary |
 | 3 | ট্রেকিং, কায়াকিং বা সাইক্লিং করব | 0 | 0 | **4** | 2 | 0 | 0 | Active: Adventure primary, Nature secondary |
 | 4 | লোকাল বাজার, উৎসব বা গ্রাম ঘুরে দেখব | 1 | 0 | 0 | 1 | 0 | **4** | Spec example: Culture +4, Heritage +1, Nature +1 |
@@ -74,7 +75,7 @@ without code changes. The seeded matrix below is the v1 calibration.
 | Heritage Hunter | 20 | Q1b4 + Q2c4 + Q3b4 + Q4b4 + Q6b4 |
 | Beach Lover | 18 | Q1a4 + Q2a4 + Q3a3 + Q4a3 + Q6a4 |
 | Adventure Seeker | 17 | Q1c3 + Q2b2 + Q3c4 + Q4c4 + Q6c4 |
-| Nature Explorer | 12 | Q1c3 + Q2b4 + Q3a2 + Q4a1 + Q6c2 |
+| Nature Explorer | 14 | Q1c3 + Q2b4 + Q3a3 + Q4a2 + Q6c2 (v1.1; was 12) |
 | Urban Explorer | 20 | Q1e4 + Q2e4 + Q3e4 + Q4e4 + Q6e4 |
 | Culture Connector | 20 | Q1d4 + Q2d4 + Q3d4 + Q4d4 + Q6d4 |
 
@@ -91,7 +92,10 @@ the answer has a weight for P.
 `max_possible(P)` = sum of P's maximum weight across each scoring question
 (Q1–Q4, Q6). Normalized scores are **relative preference scores for display and
 analytics only** — they are not probabilities and must not be labeled as such.
-They are also not used for ranking (raw scores are).
+They are also not used for ranking (raw scores are). Because maxima differ per
+persona, the raw-score winner can display a lower normalized percentage than the
+runner-up; that is accepted by design and is why normalized values are never
+shown as a "match" for the primary persona.
 
 ## 4. Primary Persona & Deterministic Tie Handling
 
@@ -101,8 +105,10 @@ They are also not used for ranking (raw scores are).
    persona.
 3. **Core-question confidence** — among still-tied personas, higher sum of weights
    from core questions Q1–Q4 wins.
-4. **Fixed priority fallback** — predefined, hardcoded persona priority constant:
-   `Heritage > Nature > Culture > Adventure > Beach > Urban`. Never random.
+4. **Tie-break order** — `Persona.tie_break_order` (DB field, seeded
+   `1–6`: Heritage > Nature > Culture > Adventure > Beach > Urban). Personas
+   with `tie_break_order = 0` sort after seeded ones, then by slug. Never random
+   and never dependent on set/hash iteration.
 
 All steps are deterministic. The full chain is exercised by tests (testing.md §2.4).
 
@@ -129,15 +135,15 @@ stakeholders later request them; any change requires a new questionnaire version
 
 | Case | Answers (Q1–Q6) | Expected primary |
 |---|---|---|
-| Pure Beach | 1a, 2a, 3a, 4a, 5(any), 6a | Beach Lover (B18, N4) |
+| Pure Beach | 1a, 2a, 3a, 4a, 5(any), 6a | Beach Lover (B18, N7) |
 | Pure Heritage | 1b, 2c, 3b, 4b, 5(any), 6b | Heritage Hunter (H20, C5) |
 | Pure Adventure | 1c, 2b, 3c, 4c, 5(any), 6c | Adventure Seeker (A17, N12) |
-| Pure Nature (scenic, no thrill) | 1c, 2b, 3a, 4a, 5(any), 6a | Nature Explorer (N11, B10, A5) |
+| Pure Nature (scenic, no thrill) | 1c, 2b, 3a, 4a, 5(any), 6a | Nature Explorer (N14, B10, A5) |
 | Pure Urban | 1e, 2e, 3e, 4e, 5(any), 6e | Urban Explorer (U20, C2) |
 | Pure Culture | 1d, 2d, 3d, 4d, 5(any), 6d | Culture Connector (C20, H4, N2) |
 | Heritage + Culture | 1b, 2d, 3b, 4d, 5(any), 6d | Culture Connector (C14, H10) |
 | Nature + Adventure (thrill) | 1c, 2b, 3c, 4c, 5(any), 6c | Adventure Seeker (A17, N12) |
-| Beach + Nature | 1a, 2b, 3a, 4a, 5(any), 6a | Beach Lover (B14, N8) |
+| Beach + Nature | 1a, 2b, 3a, 4a, 5(any), 6a | Beach Lover (B14, N11) |
 | Urban + Culture | 1e, 2d, 3e, 4d, 5(any), 6e | Urban Explorer (U12, C10) |
 | Tie exercise (contrived) | see testing.md | deterministic per §4 chain |
 

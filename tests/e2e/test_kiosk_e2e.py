@@ -119,11 +119,11 @@ def test_double_tap_records_single_answer(kiosk_page, seeded):
 def test_broken_avatar_falls_back_to_global(kiosk_page, seeded):
     persona = Persona.objects.get(slug="beach_lover")
     group = AgeGroup.objects.get(name="Young Adult")
-    PersonaAvatar.objects.get_or_create(
+    PersonaAvatar.objects.update_or_create(
         persona=persona,
         gender="male",
         age_group=group,
-        defaults={"image": "avatars/beach_lover/missing-e2e.webp"},
+        defaults={"image": "avatars/beach_lover/missing-e2e.webp", "is_default": False},
     )
     page = kiosk_page
     complete_flow(page)

@@ -131,6 +131,14 @@ is returned without a second write.
 **Reset:** POST `/experience/reset/` → marks unfinished assessment `abandoned`
 (if any) → clears all `experience.*` session keys → Idle partial.
 
+**Result image:** GET `/experience/result/<uuid>/image/` (no session needed) →
+looks up the completed assessment by UUID → renders the result card as a PNG
+(Pillow, `apps/experience/services/result_image.py`) → serves it with
+`Content-Disposition: attachment`. The kiosk result partial embeds a QR code of
+this URL (`qr_image`); a phone on the same LAN scans it and downloads the
+picture. The visitor name is session-only, so the image contains none
+(docs/privacy.md).
+
 See htmx-flow.md for per-request detail.
 
 ## 6. HTMX / Alpine / Tailwind Split
@@ -139,7 +147,7 @@ See htmx-flow.md for per-request detail.
 |---|---|---|
 | Server-rendered screens & transitions | Django templates + HTMX | Single controlled container `#experience`; small focused partials |
 | Form submission & progress | HTMX | `hx-post`, `hx-target="#experience"`, `hx-disabled-elt` for double-tap guard |
-| Inactivity timers, countdowns, "Still there?" | Alpine.js | Browser-only state; listens to touch events; fires HTMX reset |
+| Inactivity timers, "Still there?" | Alpine.js | Browser-only state; listens to touch events; fires HTMX reset |
 | Selected/pressed card states, reveal animation | Alpine.js | Presentation only; source of truth stays server-side |
 | All styling, large touch-first design | Tailwind CSS | Utility classes, theme tokens in `tailwind.config` |
 

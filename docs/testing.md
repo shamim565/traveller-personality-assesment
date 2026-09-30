@@ -26,7 +26,7 @@ loaded per test session.
 Urban+Culture produce the documented primary.
 2.3 **Q5 neutrality** — changing Q5 answer must never change the persona result.
 2.4 **Ties** — contrived equal-score answer sets resolve deterministically at
-each tie-break step (raw → strong count → core confidence → fixed priority);
+each tie-break step (raw → strong count → core confidence → `tie_break_order`);
 same input always yields same output (repeat runs).
 2.5 **Malformed input** — missing answers, duplicate question ids, answers from
 inactive questions, unknown answer ids → `ScoringValidationError`.

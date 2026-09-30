@@ -1,7 +1,6 @@
-{% load static avatars %}
-{% static 'avatars/global-default.svg' as fallback_avatar %}
 <div hidden>
-    {% include "partials/page_background.html" with image="branding/kv/kv-placeholder.webp" overlay="light" animated=True oob=True %}
+    {% include "partials/page_background.html" with image="branding/kv/kv-placeholder.webp" overlay="light"
+    animated=True oob=True %}
 </div>
 <div class="relative flex flex-1 flex-col overflow-hidden">
     <main class="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-10 text-center">
@@ -17,17 +16,6 @@
     </main>
 
     <footer class="relative z-10 flex flex-col items-center gap-6 p-8">
-        <div class="flex flex-wrap items-center justify-center gap-6">
-            {% for persona in personas %}
-            <div class="flex flex-col items-center gap-2 opacity-90">
-                {% avatar_image persona as persona_avatar %}
-                <img src="{% static persona_avatar %}" alt="{{ persona.name }}"
-                    @error="$el.src = '{{ fallback_avatar }}'"
-                    class="h-24 w-24 rounded-full border-4 border-white/25 object-cover">
-                <span class="text-lg">{{ persona.name }}</span>
-            </div>
-            {% endfor %}
-        </div>
         <p class="text-xl text-white/70">#WorldTourismDay2026</p>
     </footer>
 </div>

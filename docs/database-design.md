@@ -38,7 +38,8 @@ AssessmentSession N───1 AgeGroup (optional)
 | description_bn / _en | TextField | longer copy |
 | tagline_bn / _en | CharField(120) | optional |
 | keywords_bn / _en | CharField(255) | "ইতিহাস • ঐতিহ্য • স্থাপত্য" |
-| sort_order | PositiveSmallIntegerField(default 0) | display/admin ordering only (tie-break uses a hardcoded priority constant — scoring-system.md §4) |
+| sort_order | PositiveSmallIntegerField(default 0) | display/admin ordering only |
+| tie_break_order | PositiveSmallIntegerField(default 0) | scoring tie-break priority (scoring-system.md §4); seeded 1–6, 0 = unset (falls back to slug) |
 | is_active | BooleanField(default True) | |
 
 ### Question

@@ -3,6 +3,25 @@ name = "travel-persona"
 version = "1.0.0"
 description = "AI Travel Personality Detector - World Tourism Day 2026 exhibition kiosk"
 requires-python = ">=3.11"
+dependencies = [
+    "Django>=5.2,<6.0",
+    "psycopg[binary]>=3.2",
+    "gunicorn>=22",
+    "Pillow>=11.0",
+    "qrcode>=8.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8",
+    "pytest-django>=4.9",
+    "pytest-playwright>=0.9",
+    "playwright>=1.63",
+    "requests>=2.31",
+]
+
+[tool.uv]
+package = false
 
 [tool.pytest.ini_options]
 DJANGO_SETTINGS_MODULE = "config.settings.development"

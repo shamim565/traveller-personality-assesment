@@ -61,7 +61,7 @@ POSTGRES_HOST=db
 POSTGRES_PORT=5432
 KIOSK_IDENTIFIER=KIOSK-01
 # optional:
-EXPERIENCE_RESET_DELAY_SECONDS=45
+EXPERIENCE_STILL_THERE_SECONDS=45
 ```
 
 Never commit `.env`. `.env.example` is the documented template.
@@ -95,7 +95,9 @@ curl http://<server-ip>/health/   # {"status": "ok", "db": true}
 
 - Tailwind built at image build time; output collected into the static volume.
 - Self-host `Hind Siliguri` (OFL) in `static/fonts/` with system fallbacks;
-  license file kept alongside.
+  license file kept alongside. Downloaded result images render Bengali with the
+  `.ttf` copies via Pillow + Raqm; the image installs `libfribidi0` (dlopened by
+  Pillow's bundled Raqm) so shaping is correct.
 - Avatar/branding assets deployed as static files with the fallback chain
   (database-design.md §PersonaAvatar).
 

@@ -1,12 +1,15 @@
 import logging
 
 from django.conf import settings
+from django.http import Http404, HttpResponse
 from django.shortcuts import render
 from django.views.decorators.http import require_GET, require_POST
 
 from apps.core.http import is_htmx
 from apps.experience.forms import ProfileForm
+from apps.experience.models import AssessmentSession, AssessmentStatus
 from apps.experience.services import assessment as assessment_service
+from apps.experience.services import result_image as result_image_service
 
 logger = logging.getLogger(__name__)
 
@@ -115,3 +118,27 @@ def reset(request):
     except Exception:
         logger.exception("kiosk reset failed")
     return _response(request, "partials/idle.html")
+
+
+@require_GET
+def result_image(request, session_uuid):
+    assessment = (
+        AssessmentSession.objects.filter(
+            session_uuid=session_uuid, status=AssessmentStatus.COMPLETED
+        )
+        .select_related("primary_persona", "age_group")
+        .prefetch_related("primary_persona__avatars")
+        .first()
+    )
+    if assessment is None or assessment.primary_persona is None:
+        raise Http404("result not found")
+    try:
+        payload = result_image_service.render_result_png(assessment)
+    except Exception:
+        logger.exception("result image rendering failed")
+        raise Http404("result image unavailable")
+    response = HttpResponse(payload, content_type="image/png")
+    response["Content-Disposition"] = (
+        f'attachment; filename="{assessment.primary_persona.slug}-result.png"'
+    )
+    return response

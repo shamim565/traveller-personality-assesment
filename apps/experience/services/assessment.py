@@ -8,6 +8,7 @@ import uuid
 
 from django.conf import settings
 from django.db import transaction
+from django.urls import reverse
 from django.utils import timezone
 
 from apps.experience.services import sessions
@@ -23,7 +24,7 @@ from apps.experience.models import (
     Question,
 )
 from apps.experience.selectors import questionnaire as questionnaire_selectors
-from apps.experience.services import avatars, scoring
+from apps.experience.services import avatars, result_image, scoring
 
 
 class ExperienceStateError(Exception):
@@ -217,6 +218,9 @@ def complete_experience(request):
 
 def result_context(assessment, request):
     persona = assessment.primary_persona
+    download_url = request.build_absolute_uri(
+        reverse("experience:result_image", args=[assessment.session_uuid])
+    )
     return {
         "name": sessions.get_name(request),
         "persona": persona,
@@ -228,9 +232,7 @@ def result_context(assessment, request):
         "avatar": avatars.resolve_avatar(
             persona, gender=assessment.gender, age_group=assessment.age_group
         ),
-        "score": assessment.persona_scores.filter(rank=1).first(),
-        "kiosk": assessment.kiosk_identifier,
-        "reset_delay_seconds": settings.EXPERIENCE_RESET_DELAY_SECONDS,
+        "qr_image": result_image.qr_png_data_uri(download_url),
     }
 
 
@@ -243,16 +245,7 @@ def reset_experience(request):
 
 def resume_context(request):
     if sessions.get_qv_id(request) is None:
-        return {
-            "step": "idle",
-            "context": {
-                "personas": list(
-                    Persona.objects.filter(is_active=True)
-                    .prefetch_related("avatars")
-                    .order_by("sort_order")
-                )
-            },
-        }
+        return {"step": "idle"}
 
     raw_uuid = sessions.get_assessment_uuid(request)
     if raw_uuid:

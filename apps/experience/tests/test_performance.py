@@ -42,12 +42,12 @@ def test_complete_query_budget(seeded, client, hx, django_assert_num_queries):
     client.post("/experience/profile/", PROFILE, **hx)
     for order in range(1, 7):
         client.post("/experience/answer/", {"answer_id": option_id(order)}, **hx)
-    with django_assert_num_queries(17):
+    with django_assert_num_queries(16):
         client.post("/experience/complete/", **hx)
 
 
-def test_idle_landing_has_no_avatar_n_plus_one(seeded, client, django_assert_num_queries):
-    with django_assert_num_queries(2):
+def test_idle_landing_query_budget(seeded, client, django_assert_num_queries):
+    with django_assert_num_queries(0):
         client.get("/")
 
 

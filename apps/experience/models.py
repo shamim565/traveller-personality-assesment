@@ -63,6 +63,7 @@ class Persona(models.Model):
     keywords_bn = models.CharField(max_length=255, blank=True)
     keywords_en = models.CharField(max_length=255, blank=True)
     sort_order = models.PositiveSmallIntegerField(default=0)
+    tie_break_order = models.PositiveSmallIntegerField(default=0)
     is_active = models.BooleanField(default=True)
 
     class Meta:

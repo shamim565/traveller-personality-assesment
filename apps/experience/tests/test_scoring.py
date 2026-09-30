@@ -13,18 +13,21 @@ from apps.experience.services.scoring import (
 )
 
 PERSONAS = [
-    ("heritage_hunter", "Heritage Hunter"),
-    ("beach_lover", "Beach Lover"),
-    ("adventure_seeker", "Adventure Seeker"),
-    ("nature_explorer", "Nature Explorer"),
-    ("urban_explorer", "Urban Explorer"),
-    ("culture_connector", "Culture Connector"),
+    ("heritage_hunter", "Heritage Hunter", 1),
+    ("beach_lover", "Beach Lover", 5),
+    ("adventure_seeker", "Adventure Seeker", 4),
+    ("nature_explorer", "Nature Explorer", 2),
+    ("urban_explorer", "Urban Explorer", 6),
+    ("culture_connector", "Culture Connector", 3),
 ]
 
 
 @pytest.fixture
 def personas(db):
-    return {slug: Persona.objects.create(name=name, slug=slug) for slug, name in PERSONAS}
+    return {
+        slug: Persona.objects.create(name=name, slug=slug, tie_break_order=tie_break)
+        for slug, name, tie_break in PERSONAS
+    }
 
 
 def answer_for(version, q_order, o_order):
@@ -65,7 +68,7 @@ CALIBRATION_CASES = [
         "pure_beach",
         [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (6, 1)],
         "beach_lover",
-        {"beach_lover": 18, "nature_explorer": 4},
+        {"beach_lover": 18, "nature_explorer": 7},
     ),
     (
         "pure_heritage",
@@ -83,7 +86,7 @@ CALIBRATION_CASES = [
         "pure_nature",
         [(1, 3), (2, 2), (3, 1), (4, 1), (5, 1), (6, 1)],
         "nature_explorer",
-        {"nature_explorer": 11, "beach_lover": 10, "adventure_seeker": 5},
+        {"nature_explorer": 14, "beach_lover": 10, "adventure_seeker": 5},
     ),
     (
         "pure_urban",
@@ -113,7 +116,7 @@ CALIBRATION_CASES = [
         "beach_nature",
         [(1, 1), (2, 2), (3, 1), (4, 1), (5, 1), (6, 1)],
         "beach_lover",
-        {"beach_lover": 14, "nature_explorer": 8},
+        {"beach_lover": 14, "nature_explorer": 11},
     ),
     (
         "urban_culture",
@@ -154,7 +157,7 @@ def test_normalization_uses_persona_max(seeded):
         make_answers(seeded, [(1, 1), (2, 2), (3, 1), (4, 1), (5, 1), (6, 1)])
     )
     assert result.normalized_scores["beach_lover"] == round(14 * 100 / 18)
-    assert result.normalized_scores["nature_explorer"] == round(8 * 100 / 12)
+    assert result.normalized_scores["nature_explorer"] == round(11 * 100 / 14)
     assert result.normalized_scores["adventure_seeker"] == round(2 * 100 / 17)
 
 
@@ -227,7 +230,7 @@ def test_tie_broken_by_core_confidence(personas):
     assert result.tie_metadata["step"] == "core"
 
 
-def test_tie_broken_by_fixed_priority(personas):
+def test_tie_broken_by_tie_break_order(personas):
     version = build_fixture_questionnaire(
         personas,
         {
@@ -244,6 +247,46 @@ def test_tie_broken_by_fixed_priority(personas):
     assert result.raw_scores["beach_lover"] == 8
     assert result.primary == "heritage_hunter"
     assert result.tie_metadata["step"] == "priority"
+
+
+def test_tie_break_order_field_controls_priority(personas):
+    personas["beach_lover"].tie_break_order = 1
+    personas["beach_lover"].save(update_fields=["tie_break_order"])
+    personas["heritage_hunter"].tie_break_order = 6
+    personas["heritage_hunter"].save(update_fields=["tie_break_order"])
+    version = build_fixture_questionnaire(
+        personas,
+        {
+            1: {1: {"heritage_hunter": 4}},
+            2: {1: {"heritage_hunter": 4}},
+            3: {1: {"beach_lover": 4}},
+            4: {1: {"beach_lover": 4}},
+        },
+    )
+    result = calculate_travel_persona(
+        make_answers(version, [(1, 1), (2, 1), (3, 1), (4, 1)])
+    )
+    assert result.raw_scores["heritage_hunter"] == 8
+    assert result.raw_scores["beach_lover"] == 8
+    assert result.primary == "beach_lover"
+    assert result.tie_metadata["step"] == "priority"
+
+
+def test_unset_tie_break_order_falls_back_to_slug(personas):
+    Persona.objects.update(tie_break_order=0)
+    version = build_fixture_questionnaire(
+        personas,
+        {
+            1: {1: {"heritage_hunter": 4}},
+            2: {1: {"heritage_hunter": 4}},
+            3: {1: {"beach_lover": 4}},
+            4: {1: {"beach_lover": 4}},
+        },
+    )
+    result = calculate_travel_persona(
+        make_answers(version, [(1, 1), (2, 1), (3, 1), (4, 1)])
+    )
+    assert result.primary == "beach_lover"
 
 
 def test_seeded_matrix_tie_resolves_by_priority(seeded):

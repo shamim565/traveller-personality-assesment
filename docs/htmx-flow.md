@@ -86,9 +86,12 @@ hx-post="/experience/reset/"  hx-target="#experience"
 | `question.html` | question text + answer cards |
 | `progress.html` | progress bar + "Question X of 6" (oob-updated) |
 | `analyzing.html` | spinner + auto-complete trigger |
-| `result.html` | persona reveal, avatar, description, restart |
+| `result.html` | persona reveal, avatar, description, restart, QR code |
 | `error.html` | friendly recovery + Start Again |
 | still-there overlay | rendered in `base.html` outside `#experience`; controlled by the body-level Alpine `kioskSession` guard (survives partial swaps) |
+
+Not HTMX: GET `/experience/result/<uuid>/image/` is a plain image download
+(QR target, scanned by the visitor's phone) — see architecture.md §5.
 
 ## 4. HTMX Attributes Used (conventions)
 

@@ -20,15 +20,15 @@ def hx():
     return {"HTTP_HX_REQUEST": "true"}
 
 
-def test_idle_has_branding_and_persona_strip(seeded):
+def test_idle_has_branding_and_no_avatars(seeded):
     content = idle_page()
     assert "branding/kv/kv-placeholder.webp" in content
     assert "branding/logos/govt.png" in content
     assert "branding/logos/BG-tourism-board.png" in content
     assert "world-tourism-day/world-tourism-day-logo.png" in content
     assert "#WorldTourismDay2026" in content
-    for persona in seeded_avatar_slugs():
-        assert f"avatars/{persona}/neutral.svg" in content
+    assert "neutral.svg" not in content
+    assert "global-default.svg" not in content
 
 
 def test_quiz_page_has_inactivity_guard(seeded, client, hx):
@@ -159,7 +159,7 @@ def test_compact_header_has_no_background_band(seeded, client, hx):
         assert "backdrop-blur" not in tag
 
 
-def test_result_page_has_countdown_and_avatar(seeded, client, hx):
+def test_result_page_has_avatar_and_manual_restart(seeded, client, hx):
     start_and_profile(client, hx)
     for q_order in range(1, 7):
         question = seeded.questions.get(order=q_order)
@@ -169,18 +169,9 @@ def test_result_page_has_countdown_and_avatar(seeded, client, hx):
         )
     response = client.post("/experience/complete/", **hx)
     content = response.content.decode()
-    assert "kioskCountdown" in content
-    assert "avatars/beach_lover/neutral.svg" in content
+    assert "kioskCountdown" not in content
+    assert "avatars/beach_lover/male-young_adult.webp" in content
     assert "BEACH LOVER" in content
-    assert "সেকেন্ড পরে স্বয়ংক্রিয়ভাবে রিসেট হবে" in content
-
-
-def seeded_avatar_slugs():
-    return [
-        "heritage_hunter",
-        "beach_lover",
-        "adventure_seeker",
-        "nature_explorer",
-        "urban_explorer",
-        "culture_connector",
-    ]
+    assert "/experience/reset/" in content
+    assert "data:image/png;base64" in content
+    assert "Scan to download your result image" in content

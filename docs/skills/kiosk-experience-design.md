@@ -15,8 +15,8 @@ persona reveal, and visitor throughput for the exhibition kiosk.
 4. Total journey target: 60–90 s (profile 10–15 s, 6 questions × 5–8 s,
    analyzing 1–2 s, result 10–20 s).
 5. Progress is always visible ("Question 3 of 6" + bar).
-6. Inactivity: 45 s → "Still there?" overlay → +10 s → auto-reset. Result
-   screen auto-resets at 45 s with visible countdown.
+6. Inactivity during profile/quiz: 45 s → "Still there?" overlay → +10 s →
+   auto-reset. Result screen has no timer; it waits for "Start Again".
 7. Reset clears every piece of visitor state; next visitor never sees prior data.
 8. Every failure state offers a single "Start Again" action; never an error page.
 9. Reveal is fast and punchy; analysis delay is cosmetic (≤ 2 s), not "waiting

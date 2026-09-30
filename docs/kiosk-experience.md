@@ -23,7 +23,7 @@ Idle/Attract ──▶ Profile ──▶ Q1 ──▶ Q2 ──▶ Q3 ──▶ 
 | 3 | Quiz ×6 | One question per screen, large answer cards | 5–8 s each (30–48 s total) | Tap an answer card | 45 s idle → "Still there?" → +10 s → reset | HTMX POST `/experience/answer/` → next question (or Analyzing after Q6) |
 | 4 | Analyzing | Moment of anticipation | 1–2 s | none | — | automatic: HTMX `load` trigger after ~1.6 s calls `/experience/complete/` |
 | 5 | Reveal | Punchy persona announcement ("SAZID, YOU ARE A HERITAGE HUNTER!") | included in result | none | — | part of Result screen |
-| 6 | Result | Avatar, description, keywords, style hints, branding; photo-ready | 10–20 s display, then auto-reset | Tap "Start Again" | 45 s auto-reset countdown (Alpine) | HTMX POST `/experience/reset/` → Idle |
+| 6 | Result | Avatar, description, keywords, style hints, branding; photo-ready; QR code to download the image | until "Start Again" | Tap "Start Again" | none (waits for "Start Again") | HTMX POST `/experience/reset/` → Idle |
 | 7 | Error/Recovery | Friendly restart, never a Django traceback | as needed | Tap "Start Again" | none | `/experience/reset/` → Idle |
 
 **Totals:** Profile 10–15 s + Quiz 30–48 s + Analyzing 1–2 s + Result 10–20 s ≈ **60–90 s**.
@@ -44,7 +44,6 @@ Idle/Attract ──▶ Profile ──▶ Q1 ──▶ Q2 ──▶ Q3 ──▶ 
 
 | Parameter | Default | Meaning |
 |---|---|---|
-| `EXPERIENCE_RESET_DELAY_SECONDS` | 45 | Auto-reset countdown on result screen |
 | `EXPERIENCE_STILL_THERE_SECONDS` | 45 | Idle before "Still there?" during profile/quiz |
 | `EXPERIENCE_STILL_THERE_GRACE_SECONDS` | 10 | Extra grace before hard reset |
 | `EXPERIENCE_ANALYZING_MS` | 1600 | Analysis transition duration |
@@ -55,7 +54,11 @@ Idle/Attract ──▶ Profile ──▶ Q1 ──▶ Q2 ──▶ Q3 ──▶ 
 1. **During profile/quiz:** Alpine timer resets on any `touchstart`/`click`.
    After 45 s → full-screen "Still there?" overlay with a large "Continue" button.
    After 10 more seconds → automatic POST to `/experience/reset/`.
-2. **On result:** visible countdown; at 0 → `/experience/reset/`.
+2. **On result:** no timer; the screen stays until the visitor taps "Start Again".
+   A QR code between the result card and the button opens
+   `http://<kiosk-host>/experience/result/<uuid>/image/` on the visitor's phone,
+   which downloads the result card as a PNG (built by Pillow from the completed
+   assessment; no visitor name).
 3. **Manual "Start Again"** available on result and error screens.
 4. **Reset guarantees:** clears name, age, gender, answers, result state from the
    session; marks any unfinished assessment record `abandoned`; returns Idle.
@@ -64,7 +67,7 @@ Idle/Attract ──▶ Profile ──▶ Q1 ──▶ Q2 ──▶ Q3 ──▶ 
 ## 6. Attract-Loop & Branding
 
 Idle screen: campaign headline, CTA, World Tourism Day 2026 key visual, organizer
-and sponsor logos, persona illustration strip, slow CSS/light-Alpine animations
+and sponsor logos, slow CSS/light-Alpine animations
 (branding-aware but logic-free). Asset paths configurable in
 `static/branding/{world-tourism-day,logos,kv}/` with neutral fallbacks so the app
 runs before final assets arrive.
@@ -77,7 +80,7 @@ runs before final assets arrive.
 - "Your Travel Style": 4 keywords (e.g., History • Heritage • Architecture • Discovery)
 - Optional "You Might Love": 4 destination-style hints
 - Footer: organizer logos + campaign hashtag
-- Bottom: "Start Again" + subtle countdown
+- Bottom: QR code to download the result image, then "Start Again"
 
 Kept deliberately uncluttered so photos of the screen look clean and branded.
 

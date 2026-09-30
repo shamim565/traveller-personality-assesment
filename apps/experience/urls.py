@@ -10,5 +10,10 @@ urlpatterns = [
     path("experience/profile/", views.profile, name="profile"),
     path("experience/answer/", views.answer, name="answer"),
     path("experience/complete/", views.complete, name="complete"),
+    path(
+        "experience/result/<uuid:session_uuid>/image/",
+        views.result_image,
+        name="result_image",
+    ),
     path("experience/reset/", views.reset, name="reset"),
 ]

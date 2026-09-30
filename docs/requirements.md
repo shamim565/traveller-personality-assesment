@@ -84,11 +84,11 @@ This is an **exhibition activation**, not a conventional web application. Reliab
 
 ## 4. MVP Scope
 
-Idle screen → profile (name/age/gender) → 6-question Bangla quiz → analysis transition → persona reveal + avatar → result → restart/timeout reset. Backing: Django Admin content management, seeded questionnaire, deterministic scoring engine, analytics persistence + dashboard, Docker production config, full documentation.
+Idle screen → profile (name/age/gender) → 6-question Bangla quiz → analysis transition → persona reveal + avatar → result → restart/timeout reset. The result screen shows a QR code; scanning it opens a downloadable PNG of the result card on the visitor's phone (no visitor name included). Backing: Django Admin content management, seeded questionnaire, deterministic scoring engine, analytics persistence + dashboard, Docker production config, full documentation.
 
 ## 5. Future Scope (NOT in MVP)
 
-QR result sharing, downloadable persona image, social sharing card, WhatsApp result, English UI, destination recommendations, tourism package suggestions, AI-generated descriptions/itineraries (only as clearly-optional, internet-dependent add-ons), CRM/email/WhatsApp integrations, multiple campaigns/locations, real-time remote analytics.
+Social sharing card, WhatsApp result, English UI, destination recommendations, tourism package suggestions, AI-generated descriptions/itineraries (only as clearly-optional, internet-dependent add-ons), CRM/email/WhatsApp integrations, multiple campaigns/locations, real-time remote analytics.
 
 ## 6. Explicit Exclusions
 
@@ -112,7 +112,7 @@ User registration, social login, mobile app, React/Next/SPA frontend, Django RES
 | Rapid double-taps | Duplicate answers/records | Idempotent answer storage (one per question), UI disabling during transition, unique constraints |
 | Asset delays (KV, logos, avatars) | Broken images, off-brand look | Configurable static paths + deterministic fallback chain + neutral placeholder set |
 | Wrong persona feel (miscalibration) | Bad visitor experience | Calibration test suite before launch; admin-editable weights without code changes |
-| Previous visitor's data leaking to next visitor | Privacy incident | Mandatory session clear on reset/timeout; result auto-reset countdown |
+| Previous visitor's data leaking to next visitor | Privacy incident | Mandatory session clear on every reset/timeout; manual "Start Again" on result |
 | DB failure during event | Data loss | Single-node Postgres + documented pg_dump schedule; app degrades to friendly error |
 
 ## 9. Open Questions for Stakeholders (non-blocking)

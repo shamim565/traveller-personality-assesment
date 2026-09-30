@@ -36,7 +36,7 @@ def test_seed_is_idempotent(db):
     assert AnswerOption.objects.count() == 30
     assert AnswerPersonaWeight.objects.count() == 46
     assert AgeGroup.objects.count() == 5
-    assert PersonaAvatar.objects.count() == 6
+    assert PersonaAvatar.objects.count() == 66
 
 
 def test_active_version_exists(seeded):
@@ -66,6 +66,20 @@ def test_matrix_spot_checks(seeded):
     assert weights(6, 4) == {"culture_connector": 4, "heritage_hunter": 1, "nature_explorer": 1}
     assert weights(1, 3) == {"adventure_seeker": 3, "nature_explorer": 3}
     assert weights(2, 2) == {"nature_explorer": 4, "adventure_seeker": 2}
+    assert weights(3, 1) == {"beach_lover": 3, "nature_explorer": 3}
+    assert weights(4, 1) == {"beach_lover": 3, "nature_explorer": 2}
+    assert weights(6, 1) == {"beach_lover": 4, "nature_explorer": 2}
+
+
+def test_seed_sets_tie_break_order(seeded):
+    assert dict(Persona.objects.values_list("slug", "tie_break_order")) == {
+        "heritage_hunter": 1,
+        "nature_explorer": 2,
+        "culture_connector": 3,
+        "adventure_seeker": 4,
+        "beach_lover": 5,
+        "urban_explorer": 6,
+    }
 
 
 def test_question_5_is_trait_only_without_weights(seeded):
@@ -101,7 +115,21 @@ def test_age_groups_seeded_with_ranges(seeded):
 
 def test_default_avatars_seeded(seeded):
     for slug in PERSONA_SLUGS:
-        avatar = PersonaAvatar.objects.get(persona__slug=slug)
+        avatar = PersonaAvatar.objects.get(
+            persona__slug=slug, gender="", age_group=None
+        )
         assert avatar.is_default is True
-        assert avatar.gender == ""
         assert avatar.image == f"avatars/{slug}/neutral.svg"
+
+
+def test_variant_avatars_seeded(seeded):
+    assert PersonaAvatar.objects.filter(image__endswith=".webp").count() == 60
+    for slug in PERSONA_SLUGS:
+        assert PersonaAvatar.objects.filter(persona__slug=slug).count() == 11
+    avatar = PersonaAvatar.objects.get(
+        persona__slug="beach_lover",
+        gender="male",
+        age_group__name="Young Adult",
+    )
+    assert avatar.image == "avatars/beach_lover/male-young_adult.webp"
+    assert avatar.is_default is False

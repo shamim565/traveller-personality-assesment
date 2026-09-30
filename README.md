@@ -45,12 +45,6 @@ Urban Explorer · Culture Connector
 | [docs/development-plan.md](docs/development-plan.md) | Phase sequence and gates |
 | [docs/skills/](docs/skills/) | Engineering skill guides used by the team |
 
-## Status
-
-**Phases 1–22 complete.** The MVP is production-ready and Docker-validated
-(nginx → gunicorn → PostgreSQL). Remaining: Phase 22 on-site handover
-(staff training, final asset drop-in, kiosk setup per docs/exhibition-checklist.md).
-
 ## Quickstart
 
 ```bash
@@ -64,11 +58,10 @@ docker compose exec web python manage.py createsuperuser
 ## Local development
 
 ```bash
-python3 -m venv .venv && source .venv/bin/activate
-pip install -r requirements-dev.txt
+uv sync                         # creates .venv from pyproject.toml + uv.lock
 npm install && npm run build:css
-python manage.py migrate && python manage.py seed_travel_personas
-python manage.py runserver
-pytest                # unit + integration (fast)
-pytest -m e2e         # browser E2E incl. 100-assessment soak (slow)
+uv run python manage.py migrate && uv run python manage.py seed_travel_personas
+uv run python manage.py runserver
+uv run pytest                # unit + integration (fast)
+uv run pytest -m e2e         # browser E2E incl. 100-assessment soak (slow)
 ```

@@ -25,6 +25,9 @@ wherever possible, persist only what analytics justify.
   starting). Nothing persists it to PostgreSQL.
 - Result screen may show the name because it is rendered in the same session
   context; nothing persists it.
+- The downloadable result image (QR code on the result screen) is rendered from
+  the persisted assessment alone and deliberately contains **no visitor name**;
+  the phone scanning the QR has no session and the URL carries no PII.
 - If stakeholders later require name retention (e.g., social-wall), it requires:
   explicit consent, a documented business purpose, and a retention policy.
   The model intentionally has no name column.
