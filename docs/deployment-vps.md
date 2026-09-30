@@ -1,4 +1,4 @@
-# VPS Deployment — Shared Contabo Server (`persona.ruletheday.app`)
+# VPS Deployment — Shared Contabo Server (`persona.tourismbangladesh.live`)
 
 Target: a Contabo VPS running Ubuntu 24.04 that already hosts other Docker
 stacks (`ruletheday-backend` owns host :80/:443 with its own nginx + certbot;
@@ -9,7 +9,7 @@ project and is reverse-proxied by the existing ruletheday nginx.
 Internet :80/:443
    └─▶ ruletheday-backend-nginx-1        (theirs; one appended server block)
          ├── ruletheday.app / api.*      (untouched)
-         └── persona.ruletheday.app ──▶ travel-persona-nginx:80   [travel-persona]
+         └── persona.tourismbangladesh.live ──▶ travel-persona-nginx:80   [travel-persona]
                                               └─▶ travel-persona-web:8000
                                                      └─▶ travel-persona-db (internal)
 ```
@@ -20,7 +20,7 @@ conflict with the ruletheday nginx for :80). Use `docker-compose.vps.yml`.
 ## 1. DNS (Cloudflare)
 
 1. Get the VPS IP: `curl -4 -s ifconfig.me`
-2. Cloudflare dashboard → select zone **ruletheday.app** → **DNS** → **Records**
+2. Cloudflare dashboard → select zone **tourismbangladesh.live** → **DNS** → **Records**
    → **Add record**:
    - **Type:** `A`
    - **Name:** `persona`
@@ -30,7 +30,7 @@ conflict with the ruletheday nginx for :80). Use `docker-compose.vps.yml`.
      then set SSL/TLS to **Full (strict)** and exempt
      `/.well-known/acme-challenge/*` from "Always Use HTTPS".
    - **TTL:** Auto
-3. Verify: `dig +short persona.ruletheday.app @1.1.1.1` → the VPS IP.
+3. Verify: `dig +short persona.tourismbangladesh.live @1.1.1.1` → the VPS IP.
 
 ## 2. First deploy
 
@@ -54,7 +54,7 @@ docker compose -f docker-compose.vps.yml exec web python manage.py createsuperus
 ```
 DJANGO_SECRET_KEY=<openssl rand -base64 48>
 DJANGO_DEBUG=False
-DJANGO_ALLOWED_HOSTS=persona.ruletheday.app,localhost,127.0.0.1
+DJANGO_ALLOWED_HOSTS=persona.tourismbangladesh.live,localhost,127.0.0.1
 DJANGO_TIME_ZONE=Asia/Dhaka
 POSTGRES_DB=travel_persona
 POSTGRES_USER=travel_persona
@@ -79,7 +79,7 @@ curl -fsS http://127.0.0.1:8010/health/
 
 # through the shared Docker network, simulating the outer proxy
 docker exec ruletheday-backend-nginx-1 \
-  wget -qO- --header='Host: persona.ruletheday.app' http://travel-persona-nginx/health/
+  wget -qO- --header='Host: persona.tourismbangladesh.live' http://travel-persona-nginx/health/
 ```
 
 Expected: `{"status": "ok", "db": true}`.
@@ -91,8 +91,8 @@ ruletheday :80 catch-all already serves `/.well-known/acme-challenge/`.
 
 ```bash
 docker exec ruletheday-backend-certbot-1 certbot certonly --webroot \
-  -w /var/www/certbot -d persona.ruletheday.app --non-interactive --agree-tos
-ls -l /etc/letsencrypt/live/persona.ruletheday.app/
+  -w /var/www/certbot -d persona.tourismbangladesh.live --non-interactive --agree-tos
+ls -l /etc/letsencrypt/live/persona.tourismbangladesh.live/
 
 # if certbot refuses without an email:
 #   ... --non-interactive --agree-tos -m you@example.com
@@ -111,24 +111,29 @@ cp /opt/ruletheday-backend/nginx/nginx.conf \
    /opt/ruletheday-backend/nginx/nginx.conf.bak-$(date +%F)
 
 # append the contents of deploy/vps/ruletheday-snippet.conf to nginx.conf
+# (to replace an existing block, drop it first between the markers:)
+#   sed -i '/# BEGIN travel-persona/,/# END travel-persona/d' \
+#     /opt/ruletheday-backend/nginx/nginx.conf
 
 docker exec ruletheday-backend-nginx-1 nginx -t
-docker exec ruletheday-backend-nginx-1 nginx -s reload
+docker restart ruletheday-backend-nginx-1
 ```
 
-`nginx -t` must pass before reload; the appended block only matches
-`persona.ruletheday.app` (exact `server_name` beats their `_` catch-all). Their
-sites are unaffected.
+`nginx -t` must pass before applying; the appended block only matches
+`persona.tourismbangladesh.live` (exact `server_name` beats their `_`
+catch-all). Their sites are unaffected. Restart (not `-s reload`): the config is
+a single-file bind mount, so a replaced file keeps its old inode in the
+container.
 
 ## 6. Verify live
 
 ```bash
-curl -fsS https://persona.ruletheday.app/health/
+curl -fsS https://persona.tourismbangladesh.live/health/
 ```
 
 - Browser: idle → quiz → result → scan the QR with a phone (works over mobile
   data) → the result PNG downloads, showing the visitor's name and persona.
-- `https://persona.ruletheday.app/admin/` and `/dashboard/` go straight to the
+- `https://persona.tourismbangladesh.live/admin/` and `/dashboard/` go straight to the
   Django staff login.
 - Re-check `ruletheday.app` / `api.ruletheday.app` still respond.
 
@@ -165,8 +170,9 @@ docker compose -f docker-compose.vps.yml up -d --build
 ```
 
 `entrypoint.sh` runs migrations and collectstatic on start. `.env` stays
-untouched. If `deploy/vps/ruletheday-snippet.conf` changes in the repo, re-append
-the block manually and reload the ruletheday nginx.
+untouched. If `deploy/vps/ruletheday-snippet.conf` changes in the repo, re-apply
+the block (replace between the `# BEGIN/# END travel-persona` markers) and
+restart the ruletheday nginx.
 
 ## 10. Optional: basic auth for /admin/ + /dashboard/
 
