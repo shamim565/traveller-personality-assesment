@@ -11,15 +11,15 @@ analytics-enabled.
 - **Frontend:** Django Templates + HTMX + Tailwind CSS + minimal Alpine.js
 - **Database:** PostgreSQL
 - **Admin/Content:** Django Admin (questions, answers, weights, personas, avatars)
-- **Testing:** pytest, pytest-django, Django test client, Playwright (kiosk E2E)
-- **Production:** Docker Compose — nginx + gunicorn + PostgreSQL (local exhibition server)
+- **Production:** Docker Compose — gunicorn + PostgreSQL behind an existing nginx (`docs/deployment-vps.md`)
 
 ## The Experience
 
 Idle/Attract → Name · Age · Gender → 6-question Bangla quiz (one at a time,
 large touch cards) → 1.6 s "Analyzing…" → persona reveal → avatar + personalized
-result → auto/manual reset. Deterministic scoring: no external AI calls, same
-answers always produce the same persona.
+result → QR code to download the result picture (with the visitor's name) →
+"Start Again". Deterministic scoring: no external AI calls, same answers always
+produce the same persona.
 
 ## Six Personas
 
@@ -28,27 +28,12 @@ Urban Explorer · Culture Connector
 
 ## Documentation
 
-| Doc | Contents |
-|---|---|
-| [docs/requirements.md](docs/requirements.md) | Scope, MVP, exclusions, risks |
-| [docs/architecture.md](docs/architecture.md) | Monolith design, modules, session strategy, security |
-| [docs/kiosk-experience.md](docs/kiosk-experience.md) | Screen-by-screen flow, timings, reset/timeout |
-| [docs/persona-model.md](docs/persona-model.md) | Persona boundaries, overlaps, avatar logic |
-| [docs/scoring-system.md](docs/scoring-system.md) | Full weight matrix, ties, normalization, calibration |
-| [docs/database-design.md](docs/database-design.md) | Models, constraints, indexes, ER overview |
-| [docs/htmx-flow.md](docs/htmx-flow.md) | Every HTMX interaction and partial |
-| [docs/analytics.md](docs/analytics.md) | Metrics, queries, dashboard, exports |
-| [docs/privacy.md](docs/privacy.md) | Data inventory, retention, name strategy |
-| [docs/testing.md](docs/testing.md) | Test strategy incl. E2E + reliability |
-| [docs/deployment.md](docs/deployment.md) | Docker, env vars, kiosk mode, backups |
-| [docs/exhibition-checklist.md](docs/exhibition-checklist.md) | Event-day runbook |
-| [docs/development-plan.md](docs/development-plan.md) | Phase sequence and gates |
-| [docs/skills/](docs/skills/) | Engineering skill guides used by the team |
+- [docs/deployment-vps.md](docs/deployment-vps.md) — Docker stack, env vars, TLS, backups
 
 ## Quickstart
 
 ```bash
-cp .env.example .env            # fill in secrets (see docs/deployment.md)
+cp .env.example .env            # fill in secrets (see docs/deployment-vps.md)
 docker compose up -d --build    # web runs migrate + collectstatic on start
 docker compose exec web python manage.py seed_travel_personas
 docker compose exec web python manage.py createsuperuser
@@ -62,6 +47,4 @@ uv sync                         # creates .venv from pyproject.toml + uv.lock
 npm install && npm run build:css
 uv run python manage.py migrate && uv run python manage.py seed_travel_personas
 uv run python manage.py runserver
-uv run pytest                # unit + integration (fast)
-uv run pytest -m e2e         # browser E2E incl. 100-assessment soak (slow)
 ```

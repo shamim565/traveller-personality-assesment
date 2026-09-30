@@ -1,7 +1,8 @@
 """Ephemeral, namespaced visitor state in the Django session.
 
 Everything here is JSON-serializable (cookie session backend). The visitor
-name lives ONLY in these keys and is cleared on reset/timeout (privacy.md §2).
+name lives in these keys during the flow; it is cleared on reset/timeout and
+copied onto the completed assessment at completion.
 """
 
 PREFIX = "experience."

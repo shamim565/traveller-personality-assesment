@@ -110,7 +110,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # ---------------------------------------------------------------------------
-# Kiosk / experience configuration (see docs/kiosk-experience.md §4)
+# Kiosk / experience configuration
 # ---------------------------------------------------------------------------
 
 KIOSK_IDENTIFIER = os.getenv("KIOSK_IDENTIFIER", "KIOSK-01")
@@ -124,7 +124,7 @@ EXPERIENCE_ANALYZING_MS = env_int("EXPERIENCE_ANALYZING_MS", 1600)
 AVATAR_GLOBAL_DEFAULT = "avatars/global-default.svg"
 
 # ---------------------------------------------------------------------------
-# Logging: console only, no visitor PII by policy (docs/privacy.md §9)
+# Logging: console only, no visitor PII by policy
 # ---------------------------------------------------------------------------
 
 LOGGING = {

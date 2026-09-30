@@ -1,9 +1,8 @@
 """QR code for the kiosk result screen plus the PNG download served to a
-visitor's phone after scanning it (docs/kiosk-experience.md §Result).
+visitor's phone after scanning it.
 
-The visitor name lives only in the kiosk session and is never persisted
-(docs/privacy.md), so the downloadable image is built from the completed
-assessment alone and intentionally contains no visitor name.
+The visitor name is stored on the completed assessment at completion and drawn
+on the downloaded image, matching the name shown on the result screen.
 """
 
 from __future__ import annotations

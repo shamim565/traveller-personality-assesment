@@ -8,7 +8,6 @@
     "watch:css": "tailwindcss -i ./static/src/css/input.css -o ./static/css/kiosk.css --watch"
   },
   "devDependencies": {
-    "playwright": "^1.63.0",
     "tailwindcss": "^3.4.17"
   }
 }

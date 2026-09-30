@@ -1,7 +1,7 @@
 """Production settings: PostgreSQL, hardened security, static collection.
 
 All values come from environment variables. Intended to run behind nginx
-(which terminates TLS) inside Docker (see docs/deployment.md).
+(which terminates TLS) inside Docker (see docs/deployment-vps.md).
 """
 
 from .base import *  # noqa: F401,F403

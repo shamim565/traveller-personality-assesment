@@ -1,4 +1,4 @@
-"""Aggregate read queries for the analytics dashboard (docs/analytics.md §2).
+"""Aggregate read queries for the analytics dashboard.
 
 Everything is database-side aggregation; nothing pulls full rows into Python.
 """

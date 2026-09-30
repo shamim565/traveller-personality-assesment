@@ -11,23 +11,5 @@ dependencies = [
     "qrcode>=8.0",
 ]
 
-[dependency-groups]
-dev = [
-    "pytest>=8",
-    "pytest-django>=4.9",
-    "pytest-playwright>=0.9",
-    "playwright>=1.63",
-    "requests>=2.31",
-]
-
 [tool.uv]
 package = false
-
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.development"
-testpaths = ["apps", "tests"]
-python_files = ["test_*.py"]
-addopts = "-m 'not e2e'"
-markers = [
-    "e2e: kiosk end-to-end browser tests (run with pytest -m e2e)",
-]

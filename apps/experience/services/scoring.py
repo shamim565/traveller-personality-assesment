@@ -1,9 +1,6 @@
 """Deterministic persona scoring engine.
 
-The complete weight matrix, normalization rules, tie handling and
-calibration cases are documented in docs/scoring-system.md — this module
-is their executable implementation.
-
+Weighted matrix with normalization rules and deterministic tie handling.
 Pure business logic: no HTTP, no templates, no session access.
 The engine performs small, indexed reads (personas, weights, active
 questions) so the caller can pass plain AnswerOption instances.

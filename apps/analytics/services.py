@@ -1,4 +1,4 @@
-"""CSV export builders for authorized staff (docs/analytics.md §4)."""
+"""CSV export builders for authorized staff."""
 
 import csv
 import io

@@ -1,5 +1,4 @@
-"""Avatar resolution with the deterministic fallback chain
-(docs/persona-model.md §7, docs/database-design.md §PersonaAvatar):
+"""Avatar resolution with the deterministic fallback chain:
 
 exact persona+gender+age_group
     -> persona+gender default (is_default, no age group)

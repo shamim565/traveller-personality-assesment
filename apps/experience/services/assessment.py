@@ -1,7 +1,6 @@
 """Kiosk assessment orchestration: start, profile, answer, complete, reset.
 
-Views stay thin — all state transitions and persistence live here
-(docs/architecture.md §3, docs/htmx-flow.md).
+Views stay thin — all state transitions and persistence live here.
 """
 
 import uuid

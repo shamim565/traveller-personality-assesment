@@ -1,4 +1,4 @@
-"""Read-model queries for the kiosk flow (docs/architecture.md §3)."""
+"""Read-model queries for the kiosk flow."""
 
 from apps.experience.models import Question, QuestionnaireVersion
 
