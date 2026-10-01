@@ -1,21 +1,27 @@
 <div hidden>
-    {% include "partials/page_background.html" with image="branding/kv/kv-placeholder.webp" overlay="light"
-    animated=True oob=True %}
+    {% include "partials/page_background.html" with image="backgrounds/result.webp" overlay="left" mirror=True animated=False oob=True %}
 </div>
 <div class="relative flex flex-1 flex-col overflow-hidden">
-    <main class="relative z-10 flex flex-1 flex-col items-center justify-center gap-10 px-10 text-center">
-        <h1 class="animate-float-slow text-7xl font-bold leading-tight md:text-8xl">DETECT YOUR <span
-                class="text-brand-sand">TRAVEL PERSONA</span></h1>
-        <p class="text-3xl md:text-4xl">Discover what kind of traveller you really are.</p>
-        <button x-data="kioskPress" @pointerdown="down()" @pointerup="up()" @pointerleave="up()"
-            :class="pressed ? 'scale-95' : ''"
-            class="rounded-3xl bg-brand-sand px-16 py-8 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
-            hx-post="{% url 'experience:start' %}" hx-target="#experience" hx-swap="innerHTML" hx-disabled-elt="this">
-            Discover My Travel Personality
-        </button>
+    <main class="relative z-10 flex flex-1 items-center px-6 py-8 md:px-10 xl:px-20">
+        <div class="relative max-w-3xl border-l border-white/25 pl-8 md:pl-12 xl:pl-16">
+            <span aria-hidden="true"
+                class="absolute -left-12 bottom-0 hidden rotate-180 text-lg tracking-[0.35em] text-white/50 [writing-mode:vertical-rl] xl:block">#WorldTourismDay2026</span>
+            <div class="flex flex-col items-start gap-8 text-left">
+                <h1 class="text-5xl font-bold leading-tight md:text-7xl xl:text-8xl">DETECT YOUR <span
+                        class="text-brand-sand">TRAVEL PERSONA</span></h1>
+                <p class="text-2xl md:text-3xl xl:text-4xl">Discover what kind of traveller you really are.</p>
+                <button x-data="kioskPress" @pointerdown="down()" @pointerup="up()" @pointerleave="up()"
+                    :class="pressed ? 'scale-95' : ''"
+                    class="rounded-full border-2 border-brand-sand px-14 py-7 text-3xl font-bold text-brand-sand transition-all duration-100 hover:bg-brand-sand hover:text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-white md:text-4xl"
+                    hx-post="{% url 'experience:start' %}" hx-target="#experience" hx-swap="innerHTML"
+                    hx-disabled-elt="this">
+                    Discover My Travel Personality
+                </button>
+            </div>
+        </div>
     </main>
 
-    <footer class="relative z-10 flex flex-col items-center gap-6 p-8">
+    <footer class="relative z-10 p-8 text-left xl:hidden">
         <p class="text-xl text-white/70">#WorldTourismDay2026</p>
     </footer>
 </div>

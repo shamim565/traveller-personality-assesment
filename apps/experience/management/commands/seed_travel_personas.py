@@ -5,6 +5,7 @@ from apps.experience.models import (
     AgeGroup,
     AnswerOption,
     AnswerPersonaWeight,
+    AssessmentSession,
     CompanionTrait,
     Persona,
     PersonaAvatar,
@@ -116,14 +117,15 @@ QUESTIONNAIRE = {
     "questions": [
         {
             "order": 1,
-            "text_bn": "ধরুন, এখনই ছুটিতে যাচ্ছেন—কেমন ট্রিপ চাইবেন?",
-            "text_en": "Imagine you're going on holiday right now — what kind of trip do you want?",
+            "text_bn": "ধরুন, এখনই ছুটিতে যাচ্ছেন। কেমন ট্রিপ চাইবেন?",
+            "text_en": "Imagine you're leaving for a holiday right now. What kind of trip would you want?",
             "options": [
-                {"order": 1, "text_bn": "সমুদ্রের ধারে একদম রিল্যাক্স", "text_en": "Total relaxation by the sea", "weights": {"beach_lover": 4}},
-                {"order": 2, "text_bn": "পুরোনো জায়গা, ইতিহাস আর ঐতিহ্য ঘুরে দেখা", "text_en": "Old places, history and heritage", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
-                {"order": 3, "text_bn": "পাহাড়, ট্রেকিং আর একটু অ্যাডভেঞ্চার", "text_en": "Mountains, trekking and a bit of adventure", "weights": {"adventure_seeker": 3, "nature_explorer": 3}},
-                {"order": 4, "text_bn": "স্থানীয় খাবার, মানুষ আর সংস্কৃতি এক্সপ্লোর করা", "text_en": "Exploring local food, people and culture", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
-                {"order": 5, "text_bn": "জমজমাট একটা শহর ঘুরে বেড়ানো", "text_en": "Wandering around a lively city", "weights": {"urban_explorer": 4}},
+                {"order": 1, "text_bn": "স্থানীয় খাবার, মানুষ আর সংস্কৃতি এক্সপ্লোর করতে চাই", "text_en": "I want to explore local food, people and culture", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
+                {"order": 2, "text_bn": "সমুদ্রের ধারে একদম রিল্যাক্স করতে চাই", "text_en": "I want total relaxation by the sea", "weights": {"beach_lover": 4, "nature_explorer": 1}},
+                {"order": 3, "text_bn": "জমজমাট একটা শহর ঘুরে বেড়াতে চাই", "text_en": "I want to wander around a lively city", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 4, "text_bn": "প্রকৃতির মাঝে সময় কাটাতে চাই", "text_en": "I want to spend time in nature", "weights": {"nature_explorer": 4, "adventure_seeker": 1}},
+                {"order": 5, "text_bn": "পুরোনো জায়গা, ইতিহাস আর ঐতিহ্য ঘুরে দেখতে চাই", "text_en": "I want to visit old places, history and heritage", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
+                {"order": 6, "text_bn": "ট্রেকিং, ক্যাম্পিং আর রোমাঞ্চকর কিছু করতে চাই", "text_en": "I want to do some trekking, camping and thrilling things", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
             ],
         },
         {
@@ -131,11 +133,12 @@ QUESTIONNAIRE = {
             "text_bn": "কোন ধরনের জায়গা দেখলেই আপনার ব্যাগ গুছাতে ইচ্ছা করে?",
             "text_en": "What kind of place makes you want to pack your bags?",
             "options": [
-                {"order": 1, "text_bn": "সমুদ্র আর দ্বীপ", "text_en": "Sea and islands", "weights": {"beach_lover": 4}},
-                {"order": 2, "text_bn": "পাহাড় আর বন", "text_en": "Mountains and forests", "weights": {"nature_explorer": 4, "adventure_seeker": 2}},
-                {"order": 3, "text_bn": "পুরোনো শহর বা ঐতিহাসিক জায়গা", "text_en": "Old cities or historic places", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
-                {"order": 4, "text_bn": "গ্রাম আর স্থানীয় জীবন", "text_en": "Villages and local life", "weights": {"culture_connector": 4, "nature_explorer": 1}},
-                {"order": 5, "text_bn": "আধুনিক শহর", "text_en": "A modern city", "weights": {"urban_explorer": 4}},
+                {"order": 1, "text_bn": "পুরোনো শহর বা ঐতিহাসিক জায়গা", "text_en": "Old cities or historic places", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
+                {"order": 2, "text_bn": "আধুনিক ও প্রাণবন্ত শহর", "text_en": "Modern and lively cities", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 3, "text_bn": "পাহাড়, বন, লেক আর প্রাকৃতিক সৌন্দর্যের জায়গা", "text_en": "Hills, forests, lakes and naturally beautiful places", "weights": {"nature_explorer": 4, "adventure_seeker": 1}},
+                {"order": 4, "text_bn": "সমুদ্র আর দ্বীপ", "text_en": "Sea and islands", "weights": {"beach_lover": 4, "nature_explorer": 1}},
+                {"order": 5, "text_bn": "ট্রেকিং ট্রেইল বা অ্যাডভেঞ্চার স্পট", "text_en": "Trekking trails or adventure spots", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
+                {"order": 6, "text_bn": "গ্রাম, স্থানীয় বাজার আর স্থানীয় জীবন", "text_en": "Villages, local markets and local life", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
             ],
         },
         {
@@ -143,47 +146,50 @@ QUESTIONNAIRE = {
             "text_bn": "ট্রিপে গিয়ে কোন কাজটা আপনি সবচেয়ে বেশি করতে চান?",
             "text_en": "What do you most want to do on a trip?",
             "options": [
-                {"order": 1, "text_bn": "আরাম করব, ছবি তুলব, ভিউ উপভোগ করব", "text_en": "Relax, take photos and enjoy the view", "weights": {"beach_lover": 3, "nature_explorer": 3}},
-                {"order": 2, "text_bn": "পুরোনো স্থাপনা আর ঐতিহাসিক জায়গা ঘুরব", "text_en": "Visit old structures and historic places", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
-                {"order": 3, "text_bn": "ট্রেকিং, ক্যাম্পিং বা অ্যাডভেঞ্চার কিছু করব", "text_en": "Trek, camp or do something adventurous", "weights": {"adventure_seeker": 4, "nature_explorer": 2}},
-                {"order": 4, "text_bn": "লোকাল খাবার খাব আর মানুষের সঙ্গে মিশব", "text_en": "Eat local food and mingle with people", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
-                {"order": 5, "text_bn": "শপিং, ক্যাফে আর শহর ঘুরে দেখব", "text_en": "Shop, café-hop and explore the city", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 1, "text_bn": "লোকাল খাবার খাব আর মানুষের সঙ্গে মিশব", "text_en": "I'll eat local food and mingle with people", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
+                {"order": 2, "text_bn": "ট্রেকিং, ক্যাম্পিং, কায়াকিং বা অ্যাডভেঞ্চার কিছু করব", "text_en": "I'll do some trekking, camping, kayaking or adventure", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
+                {"order": 3, "text_bn": "শপিং, ক্যাফে আর শহর ঘুরে দেখব", "text_en": "I'll shop, visit cafés and explore the city", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 4, "text_bn": "পাহাড়, বন, লেক বা বন্যপ্রাণী দেখার জায়গায় সময় কাটাব", "text_en": "I'll spend time in the hills, forests, lakes or wildlife spots", "weights": {"nature_explorer": 4, "adventure_seeker": 1}},
+                {"order": 5, "text_bn": "পুরোনো স্থাপনা আর ঐতিহাসিক জায়গা ঘুরে দেখব", "text_en": "I'll visit old structures and historic places", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
+                {"order": 6, "text_bn": "সমুদ্র বা নদীর ধারে আরাম করে সময় কাটাব", "text_en": "I'll relax by the sea or a river", "weights": {"beach_lover": 4, "nature_explorer": 1}},
             ],
         },
         {
             "order": 4,
-            "text_bn": "কোন ধরনের ট্রিপ আপনার কাছে সবচেয়ে মজার?",
-            "text_en": "What kind of trip is the most fun for you?",
+            "text_bn": "ভ্রমণের সময় কোন অনুভূতিটা আপনি সবচেয়ে বেশি খুঁজে বেড়ান?",
+            "text_en": "What feeling do you search for most while travelling?",
             "options": [
-                {"order": 1, "text_bn": "একদম শান্ত আর আরামদায়ক", "text_en": "Totally calm and relaxing", "weights": {"beach_lover": 3, "nature_explorer": 2}},
-                {"order": 2, "text_bn": "ইতিহাস আর গল্পে ভরা", "text_en": "Full of history and stories", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
-                {"order": 3, "text_bn": "একটু ঝুঁকি, একটু রোমাঞ্চ", "text_en": "A little risk, a little thrill", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
-                {"order": 4, "text_bn": "লোকাল কালচার আর নতুন অভিজ্ঞতায় ভরা", "text_en": "Full of local culture and new experiences", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
-                {"order": 5, "text_bn": "ফান, এন্টারটেইনমেন্ট আর সিটি লাইফ", "text_en": "Fun, entertainment and city life", "weights": {"urban_explorer": 4}},
+                {"order": 1, "text_bn": "রোমাঞ্চ, চ্যালেঞ্জ আর অ্যাডভেঞ্চার", "text_en": "Thrill, challenge and adventure", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
+                {"order": 2, "text_bn": "নতুন মানুষ, সংস্কৃতি আর জীবনযাত্রার সঙ্গে পরিচিত হওয়া", "text_en": "Getting to know new people, cultures and ways of life", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
+                {"order": 3, "text_bn": "শান্তি, বিশ্রাম আর নিজের জন্য একটু সময়", "text_en": "Peace, rest and a little time for myself", "weights": {"beach_lover": 4, "nature_explorer": 1}},
+                {"order": 4, "text_bn": "প্রাণচাঞ্চল্য, বিনোদন আর নতুন কিছু করার সুযোগ", "text_en": "Liveliness, entertainment and chances to try new things", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 5, "text_bn": "প্রকৃতির কাছাকাছি থাকা আর সুন্দর পরিবেশ উপভোগ করা", "text_en": "Being close to nature and enjoying beautiful surroundings", "weights": {"nature_explorer": 4, "adventure_seeker": 1}},
+                {"order": 6, "text_bn": "নতুন কিছু জানা, ইতিহাসের গল্প আবিষ্কার করা", "text_en": "Learning something new, discovering stories of history", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
             ],
         },
         {
             "order": 5,
             "text_bn": "কার সঙ্গে ঘুরতে গেলে আপনার সবচেয়ে ভালো লাগে?",
-            "text_en": "Who do you enjoy travelling with the most?",
+            "text_en": "Who do you most enjoy travelling with?",
             "options": [
-                {"order": 1, "text_bn": "একাই", "text_en": "Alone", "trait": CompanionTrait.SOLO},
-                {"order": 2, "text_bn": "পার্টনারের সঙ্গে", "text_en": "With my partner", "trait": CompanionTrait.COUPLE},
+                {"order": 1, "text_bn": "বন্ধুদের সঙ্গে", "text_en": "With friends", "trait": CompanionTrait.FRIENDS},
+                {"order": 2, "text_bn": "একা", "text_en": "Alone", "trait": CompanionTrait.SOLO},
                 {"order": 3, "text_bn": "পরিবারের সঙ্গে", "text_en": "With family", "trait": CompanionTrait.FAMILY},
-                {"order": 4, "text_bn": "বন্ধুদের সঙ্গে", "text_en": "With friends", "trait": CompanionTrait.FRIENDS},
-                {"order": 5, "text_bn": "আসলে জায়গাটা ভালো হলেই হলো!", "text_en": "The destination matters most!", "trait": CompanionTrait.DESTINATION_FIRST},
+                {"order": 4, "text_bn": "আসলে জায়গাটা ভালো হলেই হলো", "text_en": "Actually, it just needs to be a great destination", "trait": CompanionTrait.DESTINATION_FIRST},
+                {"order": 5, "text_bn": "পার্টনারের সঙ্গে", "text_en": "With my partner", "trait": CompanionTrait.COUPLE},
             ],
         },
         {
             "order": 6,
-            "text_bn": "ট্রিপে একটা পুরো দিন নিজের মতো কাটাতে পারলে কী করবেন?",
-            "text_en": "If you had a full day to yourself on a trip, what would you do?",
+            "text_bn": "কোন বিষয়টা একটি ট্রিপকে আপনার কাছে সবচেয়ে স্মরণীয় করে তোলে?",
+            "text_en": "What makes a trip most memorable for you?",
             "options": [
-                {"order": 1, "text_bn": "সমুদ্র বা নদীর ধারে বসে সূর্যাস্ত দেখব", "text_en": "Sit by the sea or river and watch the sunset", "weights": {"beach_lover": 4, "nature_explorer": 2}},
-                {"order": 2, "text_bn": "কোনো পুরোনো প্রাসাদ, মন্দির বা ঐতিহাসিক জায়গা ঘুরব", "text_en": "Visit an old palace, temple or historic place", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
-                {"order": 3, "text_bn": "ট্রেকিং, কায়াকিং বা সাইক্লিং করব", "text_en": "Go trekking, kayaking or cycling", "weights": {"adventure_seeker": 4, "nature_explorer": 2}},
-                {"order": 4, "text_bn": "লোকাল বাজার, উৎসব বা গ্রাম ঘুরে দেখব", "text_en": "Explore a local market, festival or village", "weights": {"culture_connector": 4, "heritage_hunter": 1, "nature_explorer": 1}},
-                {"order": 5, "text_bn": "শহর, রেস্টুরেন্ট আর মজার জায়গাগুলো এক্সপ্লোর করব", "text_en": "Explore the city, restaurants and fun spots", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 1, "text_bn": "শহরের প্রাণবন্ত পরিবেশ", "text_en": "The lively atmosphere of a city", "weights": {"urban_explorer": 4, "culture_connector": 1}},
+                {"order": 2, "text_bn": "অজানা কোনো ঐতিহাসিক গল্প", "text_en": "An unfamiliar story of history", "weights": {"heritage_hunter": 4, "culture_connector": 1}},
+                {"order": 3, "text_bn": "অসাধারণ কোনো প্রাকৃতিক দৃশ্য", "text_en": "A breathtaking natural view", "weights": {"nature_explorer": 4, "adventure_seeker": 1}},
+                {"order": 4, "text_bn": "সমুদ্রের ধারে শান্ত একটা মুহূর্ত", "text_en": "A peaceful moment by the sea", "weights": {"beach_lover": 4, "nature_explorer": 1}},
+                {"order": 5, "text_bn": "স্থানীয় মানুষ ও সংস্কৃতির অভিজ্ঞতা", "text_en": "Experiencing local people and culture", "weights": {"culture_connector": 4, "heritage_hunter": 1}},
+                {"order": 6, "text_bn": "রোমাঞ্চকর কিছু করার অভিজ্ঞতা", "text_en": "The experience of doing something thrilling", "weights": {"adventure_seeker": 4, "nature_explorer": 1}},
             ],
         },
     ],
@@ -193,19 +199,42 @@ QUESTIONNAIRE = {
 class Command(BaseCommand):
     help = "Seed the World Tourism Day 2026 questionnaire, personas, weights and age groups. Idempotent."
 
+    def add_arguments(self, parser):
+        parser.add_argument(
+            "--purge-assessments",
+            action="store_true",
+            help="Delete all assessments of the seeded questionnaire version before updating content.",
+        )
+
     def handle(self, *args, **options):
         personas = {slug: self._seed_persona(slug) for slug in PERSONA_SLUGS}
         version = self._seed_version()
+
+        if options["purge_assessments"]:
+            purged = AssessmentSession.objects.filter(
+                questionnaire_version=version
+            ).delete()
+            self.stdout.write(
+                self.style.WARNING(f"Purged assessments: {purged[0]} object(s) deleted.")
+            )
+
         for q_data in QUESTIONNAIRE["questions"]:
             question = self._seed_question(version, q_data)
+            option_ids = []
             for o_data in q_data["options"]:
                 option = self._seed_option(question, o_data)
+                option_ids.append(option.id)
+                AnswerPersonaWeight.objects.filter(answer_option=option).delete()
                 for slug, weight in o_data.get("weights", {}).items():
-                    AnswerPersonaWeight.objects.update_or_create(
+                    AnswerPersonaWeight.objects.create(
                         answer_option=option,
                         persona=personas[slug],
-                        defaults={"weight": weight},
+                        weight=weight,
                     )
+            AnswerOption.objects.filter(
+                question=question
+            ).exclude(pk__in=option_ids).update(is_active=False)
+
         self._seed_age_groups()
         self._seed_avatars(personas)
         self.stdout.write(
@@ -240,25 +269,28 @@ class Command(BaseCommand):
         return version
 
     def _seed_question(self, version, q_data):
-        return Question.objects.get_or_create(
+        question, _ = Question.objects.update_or_create(
             questionnaire_version=version,
             order=q_data["order"],
             defaults={
                 "text_bn": q_data["text_bn"],
                 "text_en": q_data["text_en"],
             },
-        )[0]
+        )
+        return question
 
     def _seed_option(self, question, o_data):
-        return AnswerOption.objects.get_or_create(
+        option, _ = AnswerOption.objects.update_or_create(
             question=question,
             order=o_data["order"],
             defaults={
                 "text_bn": o_data["text_bn"],
                 "text_en": o_data["text_en"],
                 "companion_trait": o_data.get("trait") or "",
+                "is_active": True,
             },
-        )[0]
+        )
+        return option
 
     def _seed_age_groups(self):
         for data in AGE_GROUPS:
