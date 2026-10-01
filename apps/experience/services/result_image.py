@@ -23,13 +23,37 @@ from apps.experience.services import avatars as avatar_service
 
 logger = logging.getLogger(__name__)
 
-WIDTH, HEIGHT = 1080, 1350
+WIDTH, HEIGHT = 1080, 1500
 PADDING = 90
 AVATAR_SIZE = 380
-NAME_Y = 172
-YOU_ARE_A_Y = 258
-PERSONA_Y = 350
-AVATAR_TOP = 420
+CAPTION_Y = 236
+NAME_Y = 292
+YOU_ARE_A_Y = 378
+PERSONA_Y = 470
+AVATAR_TOP = 540
+
+LOGO_ROW_CENTER_Y = 100
+LOGO_SIDE_HEIGHT = 88
+LOGO_CENTER_HEIGHT = 120
+LOGOS = (
+    ("branding/logos/govt.png", LOGO_SIDE_HEIGHT, "left"),
+    (
+        "branding/world-tourism-day/world-tourism-day-logo.png",
+        LOGO_CENTER_HEIGHT,
+        "center",
+    ),
+    ("branding/logos/BG-tourism-board.png", LOGO_SIDE_HEIGHT, "right"),
+)
+
+DEFAULT_RESULT_BACKGROUND = "backgrounds/result.webp"
+RESULT_BACKGROUNDS = {
+    "heritage_hunter": "backgrounds/heritage_hunter_result.webp",
+    "beach_lover": "backgrounds/beach_lover_result.webp",
+    "adventure_seeker": "backgrounds/adventure_seeker_result.webp",
+    "nature_explorer": "backgrounds/nature_explorer_result.webp",
+    "urban_explorer": "backgrounds/urban_explorer_result.webp",
+    "culture_connector": "backgrounds/culture_connector_result.webp",
+}
 
 NIGHT = (15, 23, 42)
 SAND = (245, 158, 11)
@@ -57,6 +81,10 @@ def qr_png_data_uri(url):
     return "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
 
 
+def result_background(persona):
+    return RESULT_BACKGROUNDS.get(persona.slug, DEFAULT_RESULT_BACKGROUND)
+
+
 def render_result_png(assessment):
     persona = assessment.primary_persona
     avatar = avatar_service.resolve_avatar(
@@ -65,10 +93,11 @@ def render_result_png(assessment):
     keywords = [k.strip() for k in persona.keywords_bn.split("•") if k.strip()]
     name = assessment.visitor_name
 
-    image = _canvas()
+    image = _canvas(result_background(persona))
     draw = ImageDraw.Draw(image)
 
-    _draw_tracked(draw, WIDTH // 2, 116, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
+    _draw_logos(image)
+    _draw_tracked(draw, WIDTH // 2, CAPTION_Y, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
     if name:
         name_font = _font(56, bold=True)
         draw.text(
@@ -97,6 +126,37 @@ def render_result_png(assessment):
     return buffer.getvalue()
 
 
+def _draw_logos(image):
+    for path, height, align in LOGOS:
+        logo = _load_logo(path, height)
+        if logo is None:
+            continue
+        top = LOGO_ROW_CENTER_Y - logo.height // 2
+        if align == "left":
+            left = PADDING
+        elif align == "right":
+            left = WIDTH - PADDING - logo.width
+        else:
+            left = (WIDTH - logo.width) // 2
+        image.paste(logo, (left, top), logo)
+
+
+def _load_logo(path, height):
+    found = finders.find(path)
+    if not found:
+        logger.warning("result image logo missing: %s", path)
+        return None
+    try:
+        logo = Image.open(found).convert("RGBA")
+    except Exception:
+        logger.exception("logo load failed for result image: %s", path)
+        return None
+    scale = height / logo.height
+    return logo.resize(
+        (max(1, round(logo.width * scale)), height), Image.LANCZOS
+    )
+
+
 def _ellipsize(draw, text, font, max_width):
     if draw.textlength(text, font=font) <= max_width:
         return text
@@ -119,9 +179,11 @@ def _font(size, bold=False):
     return ImageFont.truetype(str(path), size, layout_engine=_layout_engine())
 
 
-def _canvas():
+def _canvas(background_path):
     image = Image.new("RGB", (WIDTH, HEIGHT), NIGHT)
-    path = finders.find("backgrounds/result.webp")
+    path = finders.find(background_path)
+    if not path and background_path != DEFAULT_RESULT_BACKGROUND:
+        path = finders.find(DEFAULT_RESULT_BACKGROUND)
     if not path:
         return image
     try:

@@ -16,7 +16,7 @@ from apps.experience.models import (
 )
 
 UNSET_TIE_BREAK_ORDER = 1 << 16
-CORE_QUESTION_ORDERS = frozenset({1, 2, 3, 4})
+CORE_QUESTION_ORDERS = frozenset({1, 2, 3, 4, 6})
 STRONG_WEIGHT_THRESHOLD = 4
 
 

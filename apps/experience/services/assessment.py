@@ -225,6 +225,7 @@ def result_context(assessment, request):
     return {
         "name": sessions.get_name(request),
         "persona": persona,
+        "background": result_image.result_background(persona),
         "keywords": [
             keyword.strip()
             for keyword in persona.keywords_bn.split("•")
