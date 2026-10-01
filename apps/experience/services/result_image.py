@@ -45,6 +45,16 @@ LOGOS = (
     ("branding/logos/BG-tourism-board.png", LOGO_SIDE_HEIGHT, "right"),
 )
 
+DEFAULT_RESULT_BACKGROUND = "backgrounds/result.webp"
+RESULT_BACKGROUNDS = {
+    "heritage_hunter": "backgrounds/heritage_hunter_result.webp",
+    "beach_lover": "backgrounds/beach_lover_result.webp",
+    "adventure_seeker": "backgrounds/adventure_seeker_result.webp",
+    "nature_explorer": "backgrounds/nature_explorer_result.webp",
+    "urban_explorer": "backgrounds/urban_explorer_result.webp",
+    "culture_connector": "backgrounds/culture_connector_result.webp",
+}
+
 NIGHT = (15, 23, 42)
 SAND = (245, 158, 11)
 OCEAN = (14, 116, 144)
@@ -71,6 +81,10 @@ def qr_png_data_uri(url):
     return "data:image/png;base64," + base64.b64encode(buffer.getvalue()).decode("ascii")
 
 
+def result_background(persona):
+    return RESULT_BACKGROUNDS.get(persona.slug, DEFAULT_RESULT_BACKGROUND)
+
+
 def render_result_png(assessment):
     persona = assessment.primary_persona
     avatar = avatar_service.resolve_avatar(
@@ -79,7 +93,7 @@ def render_result_png(assessment):
     keywords = [k.strip() for k in persona.keywords_bn.split("•") if k.strip()]
     name = assessment.visitor_name
 
-    image = _canvas()
+    image = _canvas(result_background(persona))
     draw = ImageDraw.Draw(image)
 
     _draw_logos(image)
@@ -165,9 +179,11 @@ def _font(size, bold=False):
     return ImageFont.truetype(str(path), size, layout_engine=_layout_engine())
 
 
-def _canvas():
+def _canvas(background_path):
     image = Image.new("RGB", (WIDTH, HEIGHT), NIGHT)
-    path = finders.find("backgrounds/result.webp")
+    path = finders.find(background_path)
+    if not path and background_path != DEFAULT_RESULT_BACKGROUND:
+        path = finders.find(DEFAULT_RESULT_BACKGROUND)
     if not path:
         return image
     try:
