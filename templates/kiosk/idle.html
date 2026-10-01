@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="relative flex min-h-screen flex-col overflow-hidden">
-    {% include "partials/page_background.html" with image="branding/kv/kv-placeholder.webp" overlay="light" animated=True %}
+    {% include "partials/page_background.html" with image="backgrounds/result.webp" overlay="left" mirror=True animated=False %}
     {% include "partials/branding_header.html" %}
     <main id="experience" aria-live="polite" class="relative z-10 flex flex-1 flex-col">
         {% include "partials/idle.html" %}
