@@ -104,11 +104,9 @@ PERSONAS = {
 }
 
 AGE_GROUPS = [
-    {"name": "Teen", "min_age": 10, "max_age": 17, "order": 1},
-    {"name": "Young Adult", "min_age": 18, "max_age": 29, "order": 2},
-    {"name": "Adult", "min_age": 30, "max_age": 49, "order": 3},
-    {"name": "Mature Adult", "min_age": 50, "max_age": 64, "order": 4},
-    {"name": "Senior", "min_age": 65, "max_age": 100, "order": 5},
+    {"name": "Teen", "min_age": 10, "max_age": 20, "order": 1},
+    {"name": "Young", "min_age": 21, "max_age": 40, "order": 2},
+    {"name": "Adult", "min_age": 41, "max_age": 100, "order": 3},
 ]
 
 QUESTIONNAIRE = {

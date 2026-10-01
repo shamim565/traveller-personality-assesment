@@ -1,7 +1,7 @@
 {% load static %}
 {% static 'avatars/global-default.svg' as fallback_avatar %}
 <div hidden>
-    {% include "partials/page_background.html" with image="backgrounds/result.webp" overlay="medium" oob=True %}
+    {% include "partials/page_background.html" with image=background overlay="medium" oob=True %}
 </div>
 <div class="relative flex flex-1 flex-col items-center justify-center gap-4 p-6 text-center">
     <div x-data="kioskReveal" x-show="show" x-transition.scale.origin.top.duration.700ms
