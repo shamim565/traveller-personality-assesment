@@ -23,13 +23,27 @@ from apps.experience.services import avatars as avatar_service
 
 logger = logging.getLogger(__name__)
 
-WIDTH, HEIGHT = 1080, 1350
+WIDTH, HEIGHT = 1080, 1500
 PADDING = 90
 AVATAR_SIZE = 380
-NAME_Y = 172
-YOU_ARE_A_Y = 258
-PERSONA_Y = 350
-AVATAR_TOP = 420
+CAPTION_Y = 236
+NAME_Y = 292
+YOU_ARE_A_Y = 378
+PERSONA_Y = 470
+AVATAR_TOP = 540
+
+LOGO_ROW_CENTER_Y = 100
+LOGO_SIDE_HEIGHT = 88
+LOGO_CENTER_HEIGHT = 120
+LOGOS = (
+    ("branding/logos/govt.png", LOGO_SIDE_HEIGHT, "left"),
+    (
+        "branding/world-tourism-day/world-tourism-day-logo.png",
+        LOGO_CENTER_HEIGHT,
+        "center",
+    ),
+    ("branding/logos/BG-tourism-board.png", LOGO_SIDE_HEIGHT, "right"),
+)
 
 NIGHT = (15, 23, 42)
 SAND = (245, 158, 11)
@@ -68,7 +82,8 @@ def render_result_png(assessment):
     image = _canvas()
     draw = ImageDraw.Draw(image)
 
-    _draw_tracked(draw, WIDTH // 2, 116, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
+    _draw_logos(image)
+    _draw_tracked(draw, WIDTH // 2, CAPTION_Y, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
     if name:
         name_font = _font(56, bold=True)
         draw.text(
@@ -95,6 +110,37 @@ def render_result_png(assessment):
     buffer = io.BytesIO()
     image.save(buffer, format="PNG")
     return buffer.getvalue()
+
+
+def _draw_logos(image):
+    for path, height, align in LOGOS:
+        logo = _load_logo(path, height)
+        if logo is None:
+            continue
+        top = LOGO_ROW_CENTER_Y - logo.height // 2
+        if align == "left":
+            left = PADDING
+        elif align == "right":
+            left = WIDTH - PADDING - logo.width
+        else:
+            left = (WIDTH - logo.width) // 2
+        image.paste(logo, (left, top), logo)
+
+
+def _load_logo(path, height):
+    found = finders.find(path)
+    if not found:
+        logger.warning("result image logo missing: %s", path)
+        return None
+    try:
+        logo = Image.open(found).convert("RGBA")
+    except Exception:
+        logger.exception("logo load failed for result image: %s", path)
+        return None
+    scale = height / logo.height
+    return logo.resize(
+        (max(1, round(logo.width * scale)), height), Image.LANCZOS
+    )
 
 
 def _ellipsize(draw, text, font, max_width):
