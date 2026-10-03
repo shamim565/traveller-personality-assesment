@@ -68,6 +68,16 @@ FONT_BOLD = settings.BASE_DIR / "static" / "fonts" / "hind-siliguri-700.ttf"
 
 RASTER_SUFFIXES = {".png", ".jpg", ".jpeg", ".webp"}
 
+CAPTION_TEXTS = {
+    "bn": "আপনার ভ্রমণ ব্যক্তিত্ব",
+    "en": "TRAVELLER PERSONALITY",
+}
+
+YOU_ARE_A_TEXTS = {
+    "bn": "আপনি একজন",
+    "en": "YOU ARE A",
+}
+
 
 def qr_png_data_uri(url):
     qr = qrcode.QRCode(
@@ -87,17 +97,28 @@ def result_background(persona):
 
 def render_result_png(assessment):
     persona = assessment.primary_persona
+    language = assessment.language if assessment.language in CAPTION_TEXTS else "bn"
     avatar = avatar_service.resolve_avatar(
         persona, gender=assessment.gender, age_group=assessment.age_group
     )
-    keywords = [k.strip() for k in persona.keywords_bn.split("•") if k.strip()]
+    keywords = [
+        k.strip() for k in getattr(persona, f"keywords_{language}").split("•") if k.strip()
+    ]
     name = assessment.visitor_name
 
     image = _canvas(result_background(persona))
     draw = ImageDraw.Draw(image)
 
     _draw_logos(image)
-    _draw_tracked(draw, WIDTH // 2, CAPTION_Y, "TRAVELLER PERSONALITY", _font(30, bold=True), SAND, 10)
+    _draw_tracked(
+        draw,
+        WIDTH // 2,
+        CAPTION_Y,
+        CAPTION_TEXTS[language],
+        _font(30, bold=True),
+        SAND,
+        10,
+    )
     if name:
         name_font = _font(56, bold=True)
         draw.text(
@@ -107,7 +128,9 @@ def render_result_png(assessment):
             fill=WHITE,
             anchor="mm",
         )
-    _draw_tracked(draw, WIDTH // 2, YOU_ARE_A_Y, "YOU ARE A", _font(44), WHITE, 14)
+    _draw_tracked(
+        draw, WIDTH // 2, YOU_ARE_A_Y, YOU_ARE_A_TEXTS[language], _font(44), WHITE, 14
+    )
     draw.text(
         (WIDTH // 2, PERSONA_Y),
         persona.name.upper(),
@@ -117,7 +140,14 @@ def render_result_png(assessment):
     )
 
     y = _draw_avatar(image, avatar, persona.slug, top=AVATAR_TOP)
-    y = _draw_wrapped(draw, y, persona.short_description_bn, _font(46), WHITE, max_lines=4)
+    y = _draw_wrapped(
+        draw,
+        y,
+        getattr(persona, f"short_description_{language}"),
+        _font(46),
+        WHITE,
+        max_lines=4,
+    )
     _draw_keywords(draw, y + 56, keywords)
     _draw_footer(draw, assessment)
 

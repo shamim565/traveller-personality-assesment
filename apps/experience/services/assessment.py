@@ -46,6 +46,7 @@ def start_experience(request):
     assessment = AssessmentSession.objects.create(
         questionnaire_version=version,
         started_at=timezone.now(),
+        language=sessions.get_language(request),
     )
     sessions.write_start_state(request, version, questions, assessment)
     return assessment
@@ -54,7 +55,7 @@ def start_experience(request):
 def save_profile(request, data):
     if sessions.get_qv_id(request) is None:
         raise ExperienceStateError("experience not started")
-    form = ProfileForm(data)
+    form = ProfileForm(data, lang=sessions.get_language(request))
     if not form.is_valid():
         return form
     sessions.set_profile(request, form.cleaned_data)
@@ -173,6 +174,7 @@ def complete_experience(request):
             else None
         )
         assessment.companion_trait = scoring_result.companion_trait
+        assessment.language = sessions.get_language(request)
         assessment.completed_at = timezone.now()
         assessment.duration_seconds = max(
             0, int((assessment.completed_at - assessment.started_at).total_seconds())
@@ -186,6 +188,7 @@ def complete_experience(request):
                 "primary_persona",
                 "secondary_persona",
                 "companion_trait",
+                "language",
                 "completed_at",
                 "duration_seconds",
                 "status",
@@ -219,16 +222,18 @@ def complete_experience(request):
 
 def result_context(assessment, request):
     persona = assessment.primary_persona
+    language = sessions.get_language(request)
     download_url = request.build_absolute_uri(
         reverse("experience:result_image", args=[assessment.session_uuid])
     )
     return {
         "name": sessions.get_name(request),
         "persona": persona,
+        "lang": language,
         "background": result_image.result_background(persona),
         "keywords": [
             keyword.strip()
-            for keyword in persona.keywords_bn.split("•")
+            for keyword in getattr(persona, f"keywords_{language}").split("•")
             if keyword.strip()
         ],
         "avatar": avatars.resolve_avatar(
@@ -243,6 +248,20 @@ def reset_experience(request):
     sessions.clear_session(request)
     if assessment_uuid:
         _mark_abandoned_if_unfinished(assessment_uuid)
+
+
+def touch_language(request):
+    """Keep a completed assessment's language in sync after a mid-flow switch."""
+    raw_uuid = sessions.get_assessment_uuid(request)
+    if not raw_uuid:
+        return
+    try:
+        parsed = uuid.UUID(raw_uuid)
+    except (ValueError, TypeError):
+        return
+    AssessmentSession.objects.filter(
+        session_uuid=parsed, status=AssessmentStatus.COMPLETED
+    ).update(language=sessions.get_language(request))
 
 
 def resume_context(request):
@@ -260,7 +279,10 @@ def resume_context(request):
             return {"step": "result", "context": result_context(assessment, request)}
 
     if sessions.get_name(request) is None:
-        return {"step": "profile", "context": {"form": ProfileForm()}}
+        return {
+            "step": "profile",
+            "context": {"form": ProfileForm(lang=sessions.get_language(request))},
+        }
 
     question = current_question(request)
     if question is None:

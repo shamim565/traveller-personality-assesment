@@ -1,9 +1,9 @@
 {% load static %}<!DOCTYPE html>
-<html lang="bn">
+<html lang="{{ LANG }}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{% block title %}AI Travel Personality Detector{% endblock %}</title>
+    <title>{% block title %}{% if LANG == "en" %}AI Travel Personality Detector{% else %}এআই ভ্রমণ ব্যক্তিত্ব শনাক্তকারী{% endif %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/kiosk.css' %}">
     {% block head %}{% endblock %}
     <script src="{% static 'js/vendor/htmx.min.js' %}" defer></script>
@@ -12,17 +12,17 @@
 </head>
 <body class="min-h-screen select-none bg-brand-night text-white antialiased"
       hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'
-      x-data='kioskSession({ stillThere: {{ K_STILL_THERE_SECONDS }}, grace: {{ K_STILL_THERE_GRACE_SECONDS }}, resetUrl: "{% url 'experience:reset' %}" })'>
+      x-data='kioskSession({ stillThere: {{ K_STILL_THERE_SECONDS }}, grace: {{ K_STILL_THERE_GRACE_SECONDS }}, resetUrl: "{% url 'experience:reset' %}", languageUrl: "{% url 'experience:set_language' %}", csrfToken: "{{ csrf_token }}", lang: "{{ LANG }}" })'>
     {% block content %}{% endblock %}
 
     <div x-show="prompt" x-cloak
          class="fixed inset-0 z-50 flex flex-col items-center justify-center gap-8 bg-brand-night/95 p-10 text-center backdrop-blur"
          role="alertdialog" aria-live="assertive">
-        <p class="text-6xl font-bold">Still there?</p>
-        <p class="text-4xl">আপনি কি এখনও এখানে আছেন?</p>
+        <p class="text-6xl font-bold">{% if LANG == "en" %}Still there?{% else %}আপনি কি এখনও এখানে আছেন?{% endif %}</p>
+        <p class="text-4xl">{% if LANG == "en" %}The quiz will restart if you are away.{% else %}অনুপস্থিত থাকলে কুইজটি আবার শুরু হবে।{% endif %}</p>
         <button @click="prompt = false; arm()"
                 class="rounded-2xl bg-brand-sand px-14 py-7 text-4xl font-bold text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-white">
-            Continue — চালিয়ে যান
+            {% if LANG == "en" %}Continue{% else %}চালিয়ে যান{% endif %}
         </button>
     </div>
 </body>

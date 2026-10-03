@@ -1,5 +1,7 @@
 from django.conf import settings
 
+from apps.experience.services import sessions
+
 
 def kiosk_settings(request):
     return {
@@ -9,3 +11,7 @@ def kiosk_settings(request):
         "K_STILL_THERE_GRACE_SECONDS": settings.EXPERIENCE_STILL_THERE_GRACE_SECONDS,
         "K_ANALYZING_MS": settings.EXPERIENCE_ANALYZING_MS,
     }
+
+
+def experience_language(request):
+    return {"LANG": sessions.get_language(request)}
