@@ -324,5 +324,5 @@ def _draw_avatar_placeholder(draw, box, slug):
 
 def _draw_footer(draw, assessment):
     completed = assessment.completed_at or timezone.now()
-    label = f"{assessment.kiosk_identifier}  •  {completed:%d %b %Y}"
+    label = f"{completed:%d %b %Y}"
     draw.text((WIDTH // 2, HEIGHT - 76), label, font=_font(30), fill=MUTED, anchor="mm")
