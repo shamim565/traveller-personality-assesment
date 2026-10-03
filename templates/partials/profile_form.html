@@ -8,10 +8,12 @@
     data-guard="1"
     class="flex flex-1 flex-col items-center justify-center gap-10 p-10 text-center"
     x-data="{ age: {{ form.age.value|default:25 }} }">
-    <h1 class="text-6xl font-bold">আপনার সম্পর্কে বলুন</h1>
+    <h1 class="text-6xl font-bold">
+        {% if LANG == "en" %}Tell us about yourself{% else %}আপনার সম্পর্কে বলুন{% endif %}
+    </h1>
 
     <label class="flex flex-col items-center gap-3 text-3xl">
-        আপনার নাম
+        {% if LANG == "en" %}Your name{% else %}আপনার নাম{% endif %}
         <input
             type="text"
             name="name"
@@ -25,11 +27,11 @@
     {% endif %}
 
     <div class="flex flex-col items-center gap-3 text-3xl">
-        <span>আপনার বয়স</span>
+        <span>{% if LANG == "en" %}Your age{% else %}আপনার বয়স{% endif %}</span>
         <div class="flex items-center gap-4">
             <button type="button" @click="age = Math.max({{ K_MIN_AGE }}, age - 1)"
                     class="h-20 w-20 rounded-2xl bg-white/15 text-4xl font-bold focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
-                    aria-label="বয়স কমান">−</button>
+                    aria-label="{% if LANG == 'en' %}Decrease age{% else %}বয়স কমান{% endif %}">−</button>
             <input
                 type="number"
                 name="age"
@@ -40,7 +42,7 @@
                 class="w-44 rounded-2xl px-4 py-5 text-center text-4xl text-brand-night focus:outline-none focus-visible:ring-4 focus-visible:ring-brand-sand">
             <button type="button" @click="age = Math.min({{ K_MAX_AGE }}, age + 1)"
                     class="h-20 w-20 rounded-2xl bg-white/15 text-4xl font-bold focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
-                    aria-label="বয়স বাড়ান">+</button>
+                    aria-label="{% if LANG == 'en' %}Increase age{% else %}বয়স বাড়ান{% endif %}">+</button>
         </div>
     </div>
     {% if form.age.errors %}
@@ -48,7 +50,7 @@
     {% endif %}
 
     <fieldset class="flex gap-8">
-        <legend class="sr-only">আপনার লিঙ্গ</legend>
+        <legend class="sr-only">{% if LANG == "en" %}Your gender{% else %}আপনার লিঙ্গ{% endif %}</legend>
         {% for value, label in form.gender.field.choices %}
             <label x-data="kioskPress"
                    @pointerdown="down()"
@@ -75,6 +77,6 @@
         :class="pressed ? 'scale-95' : ''"
         class="rounded-3xl bg-brand-sand px-16 py-7 text-4xl font-bold text-brand-night shadow-2xl transition-transform duration-100 focus:outline-none focus-visible:ring-4 focus-visible:ring-white"
         hx-disabled-elt="this">
-        কুইজ শুরু করুন
+        {% if LANG == "en" %}Start the quiz{% else %}কুইজ শুরু করুন{% endif %}
     </button>
 </form>

@@ -7,6 +7,9 @@ copied onto the completed assessment at completion.
 
 PREFIX = "experience."
 
+LANGUAGES = ("bn", "en")
+DEFAULT_LANGUAGE = "bn"
+
 KEYS = [
     "started_at",
     "name",
@@ -74,3 +77,14 @@ def add_answer(request, question_id, answer_option_id):
 
 def get_assessment_uuid(request):
     return request.session.get(_key("assessment_uuid"))
+
+
+def get_language(request):
+    language = request.session.get(_key("language"), DEFAULT_LANGUAGE)
+    return language if language in LANGUAGES else DEFAULT_LANGUAGE
+
+
+def set_language(request, language):
+    if language not in LANGUAGES:
+        raise ValueError(f"unsupported language: {language}")
+    request.session[_key("language")] = language

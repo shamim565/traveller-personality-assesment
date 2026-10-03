@@ -9,14 +9,18 @@
         {% if name %}
             <p class="text-4xl font-bold">{{ name }},</p>
         {% endif %}
-        <p class="text-2xl tracking-[0.35em] text-white/80">YOU ARE A</p>
+        <p class="text-2xl tracking-[0.35em] text-white/80">
+            {% if LANG == "en" %}YOU ARE A{% else %}আপনি একজন{% endif %}
+        </p>
         <h1 class="text-6xl font-bold text-brand-sand md:text-7xl">{{ persona.name|upper }}!</h1>
 
         <img src="{% static avatar %}" alt="{{ persona.name }} avatar"
              @error="$el.src = '{{ fallback_avatar }}'"
              class="h-44 w-44 rounded-3xl border-4 border-brand-sand object-cover md:h-48 md:w-48">
 
-        <p class="max-w-2xl text-2xl leading-snug md:text-3xl">{{ persona.short_description_bn }}</p>
+        <p class="max-w-2xl text-2xl leading-snug md:text-3xl">
+            {% if LANG == "en" %}{{ persona.short_description_en|default:persona.short_description_bn }}{% else %}{{ persona.short_description_bn }}{% endif %}
+        </p>
 
         {% if keywords %}
             <div class="flex flex-wrap items-center justify-center gap-3">
@@ -32,7 +36,7 @@
             <img src="{{ qr_image }}" alt="Scan to download your result image"
                  class="h-24 w-24 rounded-xl bg-white">
             <p class="max-w-[13rem] text-left text-lg leading-snug text-brand-night">
-                রেজাল্ট ডাউনলোড করতে QR কোড স্ক্যান করুন
+                {% if LANG == "en" %}Scan the QR code to download your result{% else %}রেজাল্ট ডাউনলোড করতে QR কোড স্ক্যান করুন{% endif %}
             </p>
         </div>
     {% endif %}
@@ -49,7 +53,7 @@
             hx-target="#experience"
             hx-swap="innerHTML"
             hx-disabled-elt="this">
-            Start Again — আবার শুরু করুন
+            {% if LANG == "en" %}Start Again{% else %}আবার শুরু করুন{% endif %}
         </button>
     </div>
 </div>

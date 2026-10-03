@@ -2,8 +2,8 @@
     {% include "partials/page_background.html" with image="backgrounds/error.webp" overlay="dark" oob=True %}
 </div>
 <div class="flex flex-1 flex-col items-center justify-center gap-8 p-10 text-center">
-    <h1 class="text-5xl font-bold">Something went wrong.</h1>
-    <p class="text-3xl">ট্যাপ করলেই আবার শুরু করা যাবে।</p>
+    <h1 class="text-5xl font-bold">{% if LANG == "en" %}Something went wrong.{% else %}কিছু একটা সমস্যা হয়েছে।{% endif %}</h1>
+    <p class="text-3xl">{% if LANG == "en" %}Tap the button to start again.{% else %}ট্যাপ করলেই আবার শুরু করা যাবে।{% endif %}</p>
     <button
         x-data="kioskPress"
         @pointerdown="down()"
@@ -15,6 +15,6 @@
         hx-target="#experience"
         hx-swap="innerHTML"
         hx-disabled-elt="this">
-        Start Again — আবার শুরু করুন
+        {% if LANG == "en" %}Start Again{% else %}আবার শুরু করুন{% endif %}
     </button>
 </div>

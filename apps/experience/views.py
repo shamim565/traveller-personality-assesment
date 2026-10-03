@@ -10,6 +10,7 @@ from apps.experience.forms import ProfileForm
 from apps.experience.models import AssessmentSession, AssessmentStatus
 from apps.experience.services import assessment as assessment_service
 from apps.experience.services import result_image as result_image_service
+from apps.experience.services import sessions
 
 logger = logging.getLogger(__name__)
 
@@ -28,6 +29,14 @@ LANDING_TEMPLATES = {
     "quiz": "kiosk/quiz.html",
     "analyzing": "kiosk/analyzing.html",
     "result": "kiosk/result.html",
+}
+
+STEP_PARTIALS = {
+    "idle": "partials/idle.html",
+    "profile": "partials/profile_form.html",
+    "quiz": "partials/question.html",
+    "analyzing": "partials/analyzing.html",
+    "result": "partials/result.html",
 }
 
 
@@ -59,7 +68,24 @@ def start(request):
         assessment_service.start_experience(request)
     except Exception:
         return _error_response(request, "start")
-    return _response(request, "partials/profile_form.html", {"form": ProfileForm()})
+    return _response(
+        request,
+        "partials/profile_form.html",
+        {"form": ProfileForm(lang=sessions.get_language(request))},
+    )
+
+
+@require_POST
+def set_language(request):
+    try:
+        sessions.set_language(request, request.POST.get("language", ""))
+    except ValueError:
+        return _response(request, "partials/error.html")
+    assessment_service.touch_language(request)
+    state = assessment_service.resume_context(request)
+    context = state.get("context", {})
+    context["swap_language"] = True
+    return _response(request, STEP_PARTIALS[state["step"]], context)
 
 
 @require_POST

@@ -221,6 +221,7 @@ class AssessmentSession(models.Model):
     companion_trait = models.CharField(
         max_length=20, choices=CompanionTrait.choices, null=True, blank=True
     )
+    language = models.CharField(max_length=8, default="bn")
     started_at = models.DateTimeField()
     completed_at = models.DateTimeField(null=True, blank=True)
     duration_seconds = models.PositiveIntegerField(null=True, blank=True)

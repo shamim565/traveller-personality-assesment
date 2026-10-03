@@ -4,5 +4,7 @@
         <div class="h-full rounded-full bg-brand-sand transition-all duration-500"
              style="width: {% widthratio current total 100 %}%"></div>
     </div>
-    <span class="whitespace-nowrap text-2xl font-semibold">প্রশ্ন {{ current }} / {{ total }}</span>
+    <span class="whitespace-nowrap text-2xl font-semibold">
+        {% if LANG == "en" %}Question {{ current }} / {{ total }}{% else %}প্রশ্ন {{ current }} / {{ total }}{% endif %}
+    </span>
 </div>

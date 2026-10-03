@@ -6,6 +6,7 @@ app_name = "experience"
 
 urlpatterns = [
     path("", views.landing, name="landing"),
+    path("experience/language/", views.set_language, name="set_language"),
     path("experience/start/", views.start, name="start"),
     path("experience/profile/", views.profile, name="profile"),
     path("experience/answer/", views.answer, name="answer"),

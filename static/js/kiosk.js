@@ -4,6 +4,19 @@
       prompt: false,
       timer: null,
       graceTimer: null,
+      lang: config.lang || "bn",
+      setLang(value) {
+        if (this.lang === value) {
+          return;
+        }
+        this.lang = value;
+        htmx.ajax("POST", config.languageUrl, {
+          target: "#experience",
+          swap: "innerHTML",
+          values: { language: value },
+          headers: { "X-CSRFToken": config.csrfToken },
+        });
+      },
       init() {
         const poke = () => {
           this.prompt = false;
